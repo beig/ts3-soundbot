@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -67,12 +66,18 @@ public class DatabaseServiceImpl implements DatabaseService {
         return new ArrayList<>(soundFiles.values());
     }
 
+    @Override
+    public void reindex() {
+        syncDatabase();
+    }
+
     @SneakyThrows
     private void syncDatabase() {
         this.indexer.getSoundFiles().forEach(file -> {
             if (!soundFiles.containsKey(file.getName())) {
                 SoundFile soundFile = new SoundFile();
                 soundFile.setFileName(file.getName());
+                soundFile.setPath(file.getPath());
                 soundFiles.put(file.getName(), soundFile);
                 log.info("Adding file '{}' to database", file.getName());
             }

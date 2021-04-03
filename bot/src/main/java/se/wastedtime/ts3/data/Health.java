@@ -7,5 +7,4 @@ public class Health {
     String status;
     int files;
     boolean botOnline;
-    boolean isPlaying;
 }
