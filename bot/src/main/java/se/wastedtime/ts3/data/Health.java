@@ -6,5 +6,5 @@ import lombok.Value;
 public class Health {
     String status;
     int files;
-    boolean botOnline;
+    boolean online;
 }

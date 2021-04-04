@@ -1,10 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CoreService} from '../core.service';
-import {combineLatest, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {Health} from '../data/health';
 import {SoundFile} from '../data/sound-file';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {debounceTime, distinctUntilChanged, map, startWith, takeUntil} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, startWith, take, takeUntil} from 'rxjs/operators';
+import {MatDialog} from '@angular/material/dialog';
+import {BotControlComponent} from './bot-control/bot-control.component';
 
 @Component({
   selector: 'app-soundboard',
@@ -15,12 +17,13 @@ export class SoundboardComponent implements OnInit, OnDestroy {
 
   private unsubscribe = new Subject<boolean>();
 
-  health!: Observable<Health>;
+  health = new BehaviorSubject<Health>({online: false, status: 'Offline', files: 0});
   soundFiles!: Observable<SoundFile[]>;
   filterForm!: FormGroup;
   filter = new Subject<string>();
 
   constructor(private core: CoreService,
+              public dialog: MatDialog,
               private fb: FormBuilder) {
   }
 
@@ -51,9 +54,13 @@ export class SoundboardComponent implements OnInit, OnDestroy {
   }
 
   private checkHealth(): void {
-    this.health = this.core.status();
-
+    this.core.status().pipe(take(1)).subscribe(value => {
+      this.health.next(value);
+    });
     setTimeout(() => this.checkHealth(), 5000);
   }
 
+  showBotControl(): void {
+    this.dialog.open(BotControlComponent);
+  }
 }

@@ -14,12 +14,18 @@ import {MatListModule} from '@angular/material/list';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
+import { BotControlComponent } from './soundboard/bot-control/bot-control.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatSelectModule} from '@angular/material/select';
+import {MatOptionModule} from '@angular/material/core';
 
 @NgModule({
   declarations: [
     AppComponent,
     SoundboardComponent,
-    SoundFileComponent
+    SoundFileComponent,
+    BotControlComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +38,11 @@ import {MatInputModule} from '@angular/material/input';
     MatListModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    MatDialogModule,
+    MatSlideToggleModule,
+    MatSelectModule,
+    MatOptionModule
   ],
   providers: [],
   bootstrap: [AppComponent]

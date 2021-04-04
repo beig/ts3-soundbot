@@ -4,6 +4,7 @@ import {Health} from './data/health';
 import {Observable, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {SoundFile} from './data/sound-file';
+import {Channel} from './data/channel';
 
 @Injectable({
   providedIn: 'root'
@@ -33,4 +34,25 @@ export class CoreService {
   playFile(file: SoundFile): Observable<any> {
     return this.http.get(`${this.url}/files/${file.fileName}/play`);
   }
+
+  async toggleConnection(value: boolean): Promise<void> {
+    if (value) {
+      await this.http.get(`${this.url}/ts3/connect`).toPromise();
+    } else {
+      await this.http.get(`${this.url}/ts3/disconnect`).toPromise();
+    }
+  }
+
+  channels(): Observable<Channel[]> {
+    return this.http.get<Channel[]>(`${this.url}/ts3/channels`);
+  }
+
+  currentChannel(): Observable<Channel> {
+    return this.http.get<Channel>(`${this.url}/ts3/channel`);
+  }
+
+  async joinChannel(channel: Channel): Promise<void> {
+    await this.http.get<Channel>(`${this.url}/ts3/channel/${channel.id}/join`).toPromise();
+  }
+
 }

@@ -1,0 +1,12 @@
+<div>
+  <div>
+    <mat-slide-toggle [checked]="(health | async)?.online" (change)="toggleOnline($event)">Connected</mat-slide-toggle>
+  </div>
+
+  <div>
+    <mat-select (selectionChange)="changeChannel($event)">
+      <mat-option *ngFor="let channel of channels | async" [value]="channel">{{channel.name}}</mat-option>
+    </mat-select>
+  </div>
+
+</div>

@@ -1,6 +1,10 @@
 <mat-toolbar color="primary">
   <span>wastedtime.se - Soundboard</span>
   <span class="spacer"></span>
+
+  <button (click)="showBotControl()" mat-raised-button color="accent">Bot Control</button>
+
+  <span class="spacer"></span>
   {{(health | async)?.status}}
   <button mat-icon-button>
     <mat-icon>menu</mat-icon>
