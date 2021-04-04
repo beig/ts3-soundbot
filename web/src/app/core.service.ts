@@ -5,13 +5,14 @@ import {Observable, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {SoundFile} from './data/sound-file';
 import {Channel} from './data/channel';
+import {environment} from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoreService {
 
-  private url = 'http://localhost:32601/api';
+  private url = environment.url;
 
   constructor(private http: HttpClient) {
   }

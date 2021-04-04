@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/api/")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class BotApi {
 
     private final DatabaseService databaseService;

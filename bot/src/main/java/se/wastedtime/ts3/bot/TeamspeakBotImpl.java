@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -152,7 +152,7 @@ public class TeamspeakBotImpl implements TeamspeakBot {
     @Override
     @SneakyThrows
     public void playFile(SoundFile file) {
-        FFmpegAudioPlayer audioPlayer = FFmpegAudioPlayer.open(FFmpeg.getInputFormatByName("mp3"), Files.newInputStream(Path.of(file.getPath())), 10240);
+        FFmpegAudioPlayer audioPlayer = FFmpegAudioPlayer.open(FFmpeg.getInputFormatByName("mp3"), Files.newInputStream(Paths.get(file.getPath())), 10240);
         mixer.addChannel(new ResampledAudioPlayer(audioPlayer, new FFmpegResampler(
                 new AudioFormat(audioPlayer.getSampleRate(), 32, audioPlayer.getChannels(), true, false),
                 new AudioFormat(mixer.getAudioSampleRate(), 32, mixer.getAudioChannels(), true, false),

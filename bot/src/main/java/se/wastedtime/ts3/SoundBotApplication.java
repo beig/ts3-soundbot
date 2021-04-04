@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import se.wastedtime.ts3.core.DatabaseService;
 
@@ -15,6 +16,7 @@ import se.wastedtime.ts3.core.DatabaseService;
 @Slf4j
 @EnableScheduling
 @EnableWebSecurity
+@CrossOrigin
 public class SoundBotApplication extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     private final DatabaseService database;

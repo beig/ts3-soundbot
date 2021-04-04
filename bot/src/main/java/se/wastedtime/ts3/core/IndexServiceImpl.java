@@ -15,7 +15,6 @@ public class IndexServiceImpl implements IndexService {
 
     @Override
     public ArrayList<File> getSoundFiles() {
-
         File dir = new File(SOUND_DIRECTORY);
         if (!dir.exists() || !dir.isDirectory()) {
             throw new IndexException("sound folder not found");
