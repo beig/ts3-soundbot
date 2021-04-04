@@ -14,7 +14,6 @@ import se.wastedtime.ts3.data.SoundFile;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +24,7 @@ import java.util.Map;
 @Slf4j
 public class DatabaseServiceImpl implements DatabaseService {
 
-    private static final String DATABASE = "database.json";
+    private static final String DATABASE = new File("").getAbsolutePath() + File.separator + "database.json";
 
     private final IndexService indexer;
     private final Map<String, SoundFile> soundFiles = new HashMap<>();
@@ -42,12 +41,10 @@ public class DatabaseServiceImpl implements DatabaseService {
     @Override
     @SneakyThrows
     public void loadDatabase() {
-        URL resource = Thread.currentThread().getContextClassLoader().getResource(DATABASE);
-
-        if (resource == null) {
+        if (!new File(DATABASE).exists()) {
             databaseFile = setUpDatabase();
         } else {
-            databaseFile = new File(resource.toURI());
+            databaseFile = new File(DATABASE);
         }
 
         JsonReader reader = new JsonReader(new FileReader(databaseFile));
@@ -92,7 +89,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @SneakyThrows
     private File setUpDatabase() {
-        File file = new File(Thread.currentThread().getContextClassLoader().getResource(".").getFile() + DATABASE);
+        File file = new File(DATABASE);
         FileUtils.touch(file);
         FileUtils.write(file, "{}", StandardCharsets.UTF_8);
         return file;
