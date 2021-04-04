@@ -9,6 +9,6 @@ public class SoundFile {
     String fileName;
     String path;
     String displayName;
-    String categorie;
+    String category;
     List<String> tags;
 }

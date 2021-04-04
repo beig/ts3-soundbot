@@ -1,0 +1,28 @@
+<mat-toolbar color="primary">
+  <span>wastedtime.se - Soundboard</span>
+  <span class="spacer"></span>
+  {{(health | async)?.status}}
+  <button mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+</mat-toolbar>
+
+<form class="example-form" [formGroup]="filterForm" autocomplete="off">
+  <mat-form-field class="example-full-width">
+    <mat-label>Number</mat-label>
+    <input type="text"
+           class="filter-input"
+           placeholder="Search file ..."
+           aria-label="Number"
+           matInput
+           formControlName="filter">
+  </mat-form-field>
+</form>
+
+<div class="list-container">
+  <mat-list role="list">
+    <mat-list-item *ngFor="let sf of soundFiles | async">
+      <app-sound-file [soundFile]="sf"></app-sound-file>
+    </mat-list-item>
+  </mat-list>
+</div>

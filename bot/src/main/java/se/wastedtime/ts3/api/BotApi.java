@@ -3,10 +3,7 @@ package se.wastedtime.ts3.api;
 import com.github.manevolent.ts3j.api.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import se.wastedtime.ts3.bot.TeamspeakBot;
 import se.wastedtime.ts3.core.DatabaseService;
 import se.wastedtime.ts3.data.Health;
@@ -17,6 +14,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/api/")
+@CrossOrigin(origins = "http://localhost:4200")
 public class BotApi {
 
     private final DatabaseService databaseService;
@@ -50,9 +48,14 @@ public class BotApi {
         return teamspeakBot.getCurrentChannel();
     }
 
+    @GetMapping("/ts3/channel/{id}/join")
+    public void joinChannel(@PathVariable Integer id) {
+        teamspeakBot.moveToChannel(id);
+    }
+
     @GetMapping("/status")
     public Health status() {
-        return new Health("OK", databaseService.getFiles().size(), teamspeakBot.isRunning());
+        return new Health("Online", databaseService.getFiles().size(), teamspeakBot.isRunning());
     }
 
     @GetMapping("/reindex")

@@ -1,0 +1,22 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.list-container {
+  height: calc(100vh - 64px);
+  overflow: auto;
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.filter-input {
+  color: white;
+}
