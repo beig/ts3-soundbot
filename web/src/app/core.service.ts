@@ -11,7 +11,7 @@ import {Channel} from './data/channel';
 })
 export class CoreService {
 
-  private url = 'http://localhost:32600/api';
+  private url = 'http://localhost:32601/api';
 
   constructor(private http: HttpClient) {
   }
