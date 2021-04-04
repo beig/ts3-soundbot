@@ -30,3 +30,10 @@
     </mat-list-item>
   </mat-list>
 </div>
+
+<mat-paginator
+  pageSize="15"
+  [length]="soundFilesCount"
+  [pageSizeOptions]="[15]"
+  (page)="pageEvent = $event"
+></mat-paginator>

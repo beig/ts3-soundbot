@@ -4,9 +4,10 @@ import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {Health} from '../data/health';
 import {SoundFile} from '../data/sound-file';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {debounceTime, distinctUntilChanged, map, startWith, take, takeUntil} from 'rxjs/operators';
+import {map, startWith, take, takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {BotControlComponent} from './bot-control/bot-control.component';
+import {PageEvent} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-soundboard',
@@ -21,6 +22,12 @@ export class SoundboardComponent implements OnInit, OnDestroy {
   soundFiles!: Observable<SoundFile[]>;
   filterForm!: FormGroup;
   filter = new Subject<string>();
+  page = new BehaviorSubject<PageEvent>({length: 15, pageIndex: 0, pageSize: 15, previousPageIndex: 0});
+  soundFilesCount = 0;
+
+  set pageEvent(event: PageEvent) {
+    this.page.next(event);
+  }
 
   constructor(private core: CoreService,
               public dialog: MatDialog,
@@ -34,17 +41,26 @@ export class SoundboardComponent implements OnInit, OnDestroy {
 
     this.checkHealth();
 
-    this.soundFiles = combineLatest([this.filter.pipe(startWith(''),
-      distinctUntilChanged(), debounceTime(300)), this.core.getFiles()]).pipe(map(([filter, soundFiles]) => {
-      return soundFiles.filter(value =>
+    this.soundFiles = combineLatest([
+      this.filter.pipe(startWith('')),
+      this.core.getFiles(),
+      this.page
+    ]).pipe(map(([filter, soundFiles, page]) => {
+      const start = page.pageIndex * 15;
+      const end = (page.pageIndex + 1) * 15;
+
+      const files = soundFiles.filter(value =>
         value.displayName?.toLowerCase().includes(filter.toLowerCase())
         || value.fileName?.toLowerCase().includes(filter.toLowerCase())
         || value.category?.toLowerCase().includes(filter.toLowerCase())
       );
+      this.soundFilesCount = files.length;
+      return files.slice(start, end);
     }), takeUntil(this.unsubscribe));
 
     this.filterForm.controls.filter.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe(value => {
       this.filter.next(value);
+      this.page.next({length: 15, pageIndex: 0, pageSize: 15, previousPageIndex: 0});
     });
   }
 
