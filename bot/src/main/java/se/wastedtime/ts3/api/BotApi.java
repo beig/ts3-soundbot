@@ -1,10 +1,13 @@
 package se.wastedtime.ts3.api;
 
 import com.github.manevolent.ts3j.api.Channel;
+import com.github.manevolent.ts3j.api.Client;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import se.wastedtime.ts3.bot.BotException;
 import se.wastedtime.ts3.bot.TeamspeakBot;
+import se.wastedtime.ts3.bot.TeamspeakBotImpl;
 import se.wastedtime.ts3.core.DatabaseService;
 import se.wastedtime.ts3.data.Health;
 import se.wastedtime.ts3.data.SoundFile;
@@ -18,12 +21,12 @@ import java.util.List;
 public class BotApi {
 
     private final DatabaseService databaseService;
-    private final TeamspeakBot teamspeakBot;
+    private TeamspeakBot teamspeakBot;
 
     @Autowired
-    public BotApi(DatabaseService databaseService, TeamspeakBot teamspeakBot) {
+    public BotApi(DatabaseService databaseService) {
         this.databaseService = databaseService;
-        this.teamspeakBot = teamspeakBot;
+        this.teamspeakBot = new TeamspeakBotImpl();
     }
 
     @GetMapping("/ts3/connect")
@@ -38,19 +41,44 @@ public class BotApi {
         return teamspeakBot.isRunning();
     }
 
+    @GetMapping("/ts3/restart")
+    public boolean restart() {
+        disconnect();
+        this.teamspeakBot = new TeamspeakBotImpl();
+        this.teamspeakBot.setRunning(true);
+        return teamspeakBot.isRunning();
+    }
+
     @GetMapping("/ts3/channels")
     public List<Channel> channels() {
+        if (!this.teamspeakBot.isRunning()) {
+            throw new BotException("Bot not online");
+        }
         return teamspeakBot.getChannels();
     }
 
     @GetMapping("/ts3/channel")
     public Channel channel() {
+        if (!this.teamspeakBot.isRunning()) {
+            throw new BotException("Bot not online");
+        }
         return teamspeakBot.getCurrentChannel();
     }
 
     @GetMapping("/ts3/channel/{id}/join")
     public void joinChannel(@PathVariable Integer id) {
+        if (!this.teamspeakBot.isRunning()) {
+            throw new BotException("Bot not online");
+        }
         teamspeakBot.moveToChannel(id);
+    }
+
+    @GetMapping("/ts3/users")
+    public List<Client> getClients() {
+        if (!this.teamspeakBot.isRunning()) {
+            throw new BotException("Bot not online");
+        }
+        return teamspeakBot.getClients();
     }
 
     @GetMapping("/status")

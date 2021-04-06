@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Consumer;
 import java.util.stream.StreamSupport;
 
 @Slf4j
@@ -45,7 +44,6 @@ public class TeamspeakBotImpl implements TeamspeakBot {
 
     private final LocalTeamspeakClientSocket client;
     private final Mixer mixer;
-    private final Consumer<Float> volumeControl;
     private boolean running = false;
     private int currentChannel = 0;
 
@@ -80,7 +78,6 @@ public class TeamspeakBotImpl implements TeamspeakBot {
             FilterGain gainFilter = new FilterGain(1f);
             MixerFilter[] multichannelGainFilter = new MixerFilter[channels];
             for (int ch = 0; ch < channels; ch++) multichannelGainFilter[ch] = gainFilter;
-            this.volumeControl = gainFilter::setQ;
             this.mixer.addFilter(multichannelGainFilter);
 
             // Add a soft-clip filter, which protects the output of the mixer from going beyond the limit of [-1,1]

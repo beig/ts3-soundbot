@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Health} from './data/health';
-import {Observable, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {Health, Status} from './data/health';
+import {BehaviorSubject, Observable, of} from 'rxjs';
+import {catchError, distinctUntilChanged, filter, take} from 'rxjs/operators';
 import {SoundFile} from './data/sound-file';
 import {Channel} from './data/channel';
 import {environment} from '../environments/environment';
@@ -13,23 +13,30 @@ import {environment} from '../environments/environment';
 export class CoreService {
 
   private url = environment.url;
+  private _soundFiles = new BehaviorSubject<SoundFile[]>([]);
+  private _health = new BehaviorSubject<Health>({online: false, status: Status.OFFLINE, files: 0});
+
+  get health(): Observable<Health> {
+    return this._health.asObservable();
+  }
 
   constructor(private http: HttpClient) {
+    this.observeStatus();
+    this._health.pipe(distinctUntilChanged((x, y) => x.status === y.status),
+      filter(value => value.status === Status.ONLINE)).subscribe(() => {
+      this.getFiles().pipe(take(1)).subscribe(value => this._soundFiles.next(value));
+    });
   }
 
-  status(): Observable<Health> {
-    return this.http.get<Health>(`${this.url}/status`).pipe(catchError(() => {
-      const health: Health = {
-        status: 'Offline',
-        files: 0,
-        online: false
-      };
-      return of(health);
-    }));
+  private observeStatus(): void {
+    this.status().pipe(take(1)).subscribe(value => {
+      this._health.next(value);
+    });
+    setTimeout(() => this.observeStatus(), 5000);
   }
 
-  getFiles(): Observable<SoundFile[]> {
-    return this.http.get<SoundFile[]>(`${this.url}/files`);
+  get soundFiles(): Observable<SoundFile[]> {
+    return this._soundFiles.asObservable();
   }
 
   playFile(file: SoundFile): Observable<any> {
@@ -56,4 +63,22 @@ export class CoreService {
     await this.http.get<Channel>(`${this.url}/ts3/channel/${channel.id}/join`).toPromise();
   }
 
+  async restart(): Promise<void> {
+    await this.http.get(`${this.url}/ts3/restart`).toPromise();
+  }
+
+  private status(): Observable<Health> {
+    return this.http.get<Health>(`${this.url}/status`).pipe(catchError(() => {
+      const health: Health = {
+        status: Status.OFFLINE,
+        files: 0,
+        online: false
+      };
+      return of(health);
+    }));
+  }
+
+  private getFiles(): Observable<SoundFile[]> {
+    return this.http.get<SoundFile[]>(`${this.url}/files`);
+  }
 }

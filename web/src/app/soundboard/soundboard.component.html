@@ -2,7 +2,9 @@
   <span>wastedtime.se - Soundboard</span>
   <span class="spacer"></span>
 
-  <button (click)="showBotControl()" mat-raised-button color="accent">Bot Control</button>
+  <button [disabled]="(health|async)?.status === status.OFFLINE" (click)="showBotControl()" mat-raised-button
+          color="accent">Bot Control
+  </button>
 
   <span class="spacer"></span>
   {{(health | async)?.status}}
@@ -19,7 +21,7 @@
            placeholder="Search file ..."
            aria-label="Number"
            matInput
-           formControlName="filter">
+           formControlName="inputFilter">
   </mat-form-field>
 </form>
 

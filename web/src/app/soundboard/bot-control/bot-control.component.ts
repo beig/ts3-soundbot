@@ -24,7 +24,7 @@ export class BotControlComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.health = this.core.status().pipe(tap(x => this.online.next(x.online)));
+    this.health = this.core.health.pipe(tap(x => this.online.next(x.online)));
 
     this.online.pipe(takeUntil(this.unsubscribe)).subscribe(async online => {
       if (online) {

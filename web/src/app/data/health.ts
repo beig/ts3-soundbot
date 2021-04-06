@@ -1,5 +1,10 @@
 export interface Health {
-  status: string;
+  status: Status;
   files: number;
   online: boolean;
+}
+
+export enum Status {
+  ONLINE = 'Online',
+  OFFLINE = 'Offline'
 }
