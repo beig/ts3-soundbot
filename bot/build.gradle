@@ -44,6 +44,8 @@ dependencies {
 	implementation 'com.sun.jna:jna:3.0.9'
 	implementation 'com.github.manevolent:ts3j:0.1'
 	implementation 'com.github.manevolent:ffmpeg4j:4ce451b'
+
+	implementation group: 'org', name: 'jaudiotagger', version: '2.0.3'
 }
 
 test {

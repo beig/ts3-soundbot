@@ -23,7 +23,6 @@ public class IndexServiceImpl implements IndexService {
     @Override
     public ArrayList<File> getSoundFiles() {
         File dir = new File(properties.getSoundDirectory());
-        System.out.println(properties.getSoundDirectory());
         if (!dir.exists() || !dir.isDirectory()) {
             throw new IndexException("sound folder not found");
         }

@@ -6,6 +6,8 @@ import com.google.gson.stream.JsonReader;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.wastedtime.ts3.Properties;
@@ -72,15 +74,18 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @SneakyThrows
     private void syncDatabase() {
-        this.indexer.getSoundFiles().forEach(file -> {
+        for (File file : this.indexer.getSoundFiles()) {
             if (!soundFiles.containsKey(file.getName())) {
                 SoundFile soundFile = new SoundFile();
                 soundFile.setFileName(file.getName());
                 soundFile.setPath(file.getPath());
+                AudioFile af = AudioFileIO.read(soundFile.getAsFile());
+                soundFile.setDuration(af.getAudioHeader().getTrackLength());
+
                 soundFiles.put(file.getName(), soundFile);
                 log.info("Adding file '{}' to database", file.getName());
             }
-        });
+        }
 
         JsonFileWrapper wrapper = new JsonFileWrapper(new ArrayList<>(soundFiles.values()));
         FileWriter fileWriter = new FileWriter(databaseFile);
