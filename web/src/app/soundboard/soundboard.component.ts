@@ -69,7 +69,7 @@ export class SoundboardComponent implements OnInit, OnDestroy {
     this.dialog.open(BotControlComponent);
   }
 
-  playFile(file: SoundFile): void {
-    this.core.playFile(file);
+  async playFile(file: SoundFile): Promise<void> {
+    await this.core.playFile(file).toPromise();
   }
 }

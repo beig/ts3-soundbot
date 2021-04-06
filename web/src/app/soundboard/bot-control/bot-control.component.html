@@ -1,12 +1,16 @@
 <div>
-  <div>
+  <div class="connected-toggle">
     <mat-slide-toggle [checked]="(health | async)?.online" (change)="toggleOnline($event)">Connected</mat-slide-toggle>
   </div>
-
-  <div>
-    <mat-select (selectionChange)="changeChannel($event)">
+  <mat-divider></mat-divider>
+  <div class="channel-select" *ngIf="(health | async)?.online">
+    <mat-select placeholder="Select channel" (selectionChange)="changeChannel($event)">
       <mat-option *ngFor="let channel of channels | async" [value]="channel">{{channel.name}}</mat-option>
     </mat-select>
   </div>
+
+  <mat-divider></mat-divider>
+
+  <button class="restart-button" (click)="restart()" mat-raised-button color="warn">Restart</button>
 
 </div>
