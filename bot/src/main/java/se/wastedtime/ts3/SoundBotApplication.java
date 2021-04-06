@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,17 +15,11 @@ import se.wastedtime.ts3.core.DatabaseService;
 
 @SpringBootApplication
 @Slf4j
+@EnableConfigurationProperties({Properties.class})
 @EnableScheduling
 @EnableWebSecurity
 @CrossOrigin
 public class SoundBotApplication extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
-
-    private final DatabaseService database;
-
-    @Autowired
-    public SoundBotApplication(DatabaseService database) {
-        this.database = database;
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

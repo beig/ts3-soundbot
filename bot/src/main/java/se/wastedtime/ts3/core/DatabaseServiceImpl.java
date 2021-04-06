@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.wastedtime.ts3.Properties;
 import se.wastedtime.ts3.data.JsonFileWrapper;
 import se.wastedtime.ts3.data.SoundFile;
 
@@ -24,7 +25,7 @@ import java.util.Map;
 @Slf4j
 public class DatabaseServiceImpl implements DatabaseService {
 
-    private static final String DATABASE = new File("").getAbsolutePath() + File.separator + "database.json";
+    private final Properties properties;
 
     private final IndexService indexer;
     private final Map<String, SoundFile> soundFiles = new HashMap<>();
@@ -32,7 +33,8 @@ public class DatabaseServiceImpl implements DatabaseService {
     private File databaseFile;
 
     @Autowired
-    public DatabaseServiceImpl(IndexService indexer) {
+    public DatabaseServiceImpl(Properties properties, IndexService indexer) {
+        this.properties = properties;
         this.indexer = indexer;
         loadDatabase();
         syncDatabase();
@@ -41,10 +43,10 @@ public class DatabaseServiceImpl implements DatabaseService {
     @Override
     @SneakyThrows
     public void loadDatabase() {
-        if (!new File(DATABASE).exists()) {
+        if (!new File(properties.getDatabase()).exists()) {
             databaseFile = setUpDatabase();
         } else {
-            databaseFile = new File(DATABASE);
+            databaseFile = new File(properties.getDatabase());
         }
 
         JsonReader reader = new JsonReader(new FileReader(databaseFile));
@@ -89,7 +91,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @SneakyThrows
     private File setUpDatabase() {
-        File file = new File(DATABASE);
+        File file = new File(properties.getDatabase());
         FileUtils.touch(file);
         FileUtils.write(file, "{}", StandardCharsets.UTF_8);
         return file;
