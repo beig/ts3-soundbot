@@ -9,12 +9,11 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {HttpClientModule} from '@angular/common/http';
-import {SoundFileComponent} from './soundboard/sound-file/sound-file.component';
 import {MatListModule} from '@angular/material/list';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
-import { BotControlComponent } from './soundboard/bot-control/bot-control.component';
+import {BotControlComponent} from './soundboard/bot-control/bot-control.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSelectModule} from '@angular/material/select';
@@ -27,7 +26,6 @@ import {MatSortModule} from '@angular/material/sort';
   declarations: [
     AppComponent,
     SoundboardComponent,
-    SoundFileComponent,
     BotControlComponent
   ],
   imports: [
