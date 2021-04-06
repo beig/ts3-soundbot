@@ -1,13 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CoreService} from '../core.service';
-import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {SoundFile} from '../data/sound-file';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {map, startWith, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {BotControlComponent} from './bot-control/bot-control.component';
-import {PageEvent} from '@angular/material/paginator';
+import {MatPaginator} from '@angular/material/paginator';
 import {Status} from '../data/health';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatSort} from '@angular/material/sort';
 
 @Component({
   selector: 'app-soundboard',
@@ -18,21 +20,24 @@ export class SoundboardComponent implements OnInit, OnDestroy {
 
   private unsubscribe = new Subject<boolean>();
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  displayedColumns: string[] = ['name', 'duration', 'play'];
   soundFiles!: Observable<SoundFile[]>;
   filterForm!: FormGroup;
-  inputFilter = new Subject<string>();
-  page = new BehaviorSubject<PageEvent>({length: 15, pageIndex: 0, pageSize: 15, previousPageIndex: 0});
-  soundFilesCount = 0;
   health = this.core.health;
   status = Status;
+  dataSource: MatTableDataSource<SoundFile>;
 
-  set pageEvent(event: PageEvent) {
-    this.page.next(event);
+  get soundFilesCount(): number {
+    return this.dataSource.data.length;
   }
 
   constructor(private core: CoreService,
               public dialog: MatDialog,
               private fb: FormBuilder) {
+    this.dataSource = new MatTableDataSource<SoundFile>([]);
   }
 
   ngOnInit(): void {
@@ -40,26 +45,18 @@ export class SoundboardComponent implements OnInit, OnDestroy {
       inputFilter: []
     });
 
-    this.soundFiles = combineLatest([
-      this.inputFilter.pipe(startWith('')),
-      this.core.soundFiles,
-      this.page
-    ]).pipe(map(([inputFilter, soundFiles, page]) => {
-      const start = page.pageIndex * 15;
-      const end = (page.pageIndex + 1) * 15;
-
-      const files = soundFiles.filter(value =>
-        value.displayName?.toLowerCase().includes(inputFilter.toLowerCase())
-        || value.fileName?.toLowerCase().includes(inputFilter.toLowerCase())
-        || value.category?.toLowerCase().includes(inputFilter.toLowerCase())
-      );
-      this.soundFilesCount = files.length;
-      return files.slice(start, end);
-    }), takeUntil(this.unsubscribe));
+    this.core.soundFiles.subscribe(value => {
+      this.dataSource = new MatTableDataSource<SoundFile>(value);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
 
     this.filterForm.controls.inputFilter.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe(value => {
-      this.inputFilter.next(value);
-      this.page.next({length: 15, pageIndex: 0, pageSize: 15, previousPageIndex: 0});
+      this.dataSource.filter = value.trim().toLowerCase();
+
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
     });
   }
 
@@ -70,5 +67,9 @@ export class SoundboardComponent implements OnInit, OnDestroy {
 
   showBotControl(): void {
     this.dialog.open(BotControlComponent);
+  }
+
+  playFile(file: SoundFile): void {
+    this.core.playFile(file);
   }
 }
