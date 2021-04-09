@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Health, Status} from './data/health';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {catchError, distinctUntilChanged, filter, take} from 'rxjs/operators';
+import {catchError, distinctUntilChanged, filter, map, take} from 'rxjs/operators';
 import {SoundFile} from './data/sound-file';
 import {Channel} from './data/channel';
 import {environment} from '../environments/environment';
@@ -24,7 +24,11 @@ export class CoreService {
     this.observeStatus();
     this._health.pipe(distinctUntilChanged((x, y) => x.status === y.status),
       filter(value => value.status === Status.ONLINE)).subscribe(() => {
-      this.getFiles().pipe(take(1)).subscribe(value => this._soundFiles.next(value));
+      this.getFiles().pipe(map(value => {
+        let idCount = 0;
+        value.forEach(soundFile => soundFile.id = ++idCount);
+        return value;
+      }), take(1)).subscribe(value => this._soundFiles.next(value));
     });
   }
 
@@ -41,6 +45,10 @@ export class CoreService {
 
   playFile(file: SoundFile): Observable<any> {
     return this.http.get(`${this.url}/files/${file.fileName}/play`);
+  }
+
+  downloadFile(file: SoundFile): Observable<Blob> {
+    return this.http.get(`${this.url}/files/${file.fileName}/download`, {responseType: 'blob'});
   }
 
   async toggleConnection(value: boolean): Promise<void> {

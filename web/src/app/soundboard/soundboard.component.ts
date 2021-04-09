@@ -23,7 +23,7 @@ export class SoundboardComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  displayedColumns: string[] = ['name', 'duration', 'play'];
+  displayedColumns: string[] = ['id', 'name', 'duration', 'play', 'playLocal'];
   soundFiles!: Observable<SoundFile[]>;
   filterForm!: FormGroup;
   health = this.core.health;

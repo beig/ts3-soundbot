@@ -15,7 +15,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 })
 export class BotControlComponent implements OnInit, OnDestroy {
 
-  private greetings = ['servus.mp3', 'hallo.mp3', 'hallo2.mp3', 'dooochaller.mp3', 'fettiwas.mp3'];
+  private greetings = ['servus.mp3', 'hallo.mp3', 'hallo2.mp3', 'dooochaller.mp3', 'fettiwas.mp3', 'rainer winkler.mp3'];
   private unsubscribe = new Subject<boolean>();
 
   health!: Observable<Health>;

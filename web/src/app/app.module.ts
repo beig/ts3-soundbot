@@ -21,12 +21,17 @@ import {MatOptionModule} from '@angular/material/core';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
+import {AudioStatusPipe} from './core/audio-status.pipe';
+import {LocalAudioControlComponent} from './soundboard/local-audio-control/local-audio-control.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
     AppComponent,
     SoundboardComponent,
-    BotControlComponent
+    BotControlComponent,
+    AudioStatusPipe,
+    LocalAudioControlComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +51,8 @@ import {MatSortModule} from '@angular/material/sort';
     MatOptionModule,
     MatPaginatorModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

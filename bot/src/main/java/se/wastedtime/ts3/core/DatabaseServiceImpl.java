@@ -9,7 +9,9 @@ import org.apache.commons.io.FileUtils;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import se.wastedtime.ts3.Properties;
 import se.wastedtime.ts3.data.JsonFileWrapper;
 import se.wastedtime.ts3.data.SoundFile;
@@ -70,6 +72,12 @@ public class DatabaseServiceImpl implements DatabaseService {
     @Override
     public void reindex() {
         syncDatabase();
+    }
+
+    @Override
+    @SneakyThrows
+    public ByteArrayResource downloadFile(SoundFile file) {
+        return new ByteArrayResource(FileCopyUtils.copyToByteArray(file.getAsFile()));
     }
 
     @SneakyThrows

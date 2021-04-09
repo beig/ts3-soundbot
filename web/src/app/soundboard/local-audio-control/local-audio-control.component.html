@@ -1,0 +1,7 @@
+<button *ngIf="!isPlaying && !loading" (click)="playFileLocal()" mat-mini-fab color="warn">
+  <mat-icon>home</mat-icon>
+</button>
+<mat-progress-spinner *ngIf="loading" color="warn" mode="indeterminate" diameter="30"></mat-progress-spinner>
+<button *ngIf="isPlaying" (click)="stopPlay()" mat-mini-fab color="warn">
+  <mat-icon>pause</mat-icon>
+</button>

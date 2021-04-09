@@ -4,6 +4,7 @@ import com.github.manevolent.ts3j.api.Channel;
 import com.github.manevolent.ts3j.api.Client;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.web.bind.annotation.*;
 import se.wastedtime.ts3.bot.BotException;
 import se.wastedtime.ts3.bot.TeamspeakBot;
@@ -104,5 +105,10 @@ public class BotApi {
     @GetMapping("/files/{id}/play")
     public void playFile(@PathVariable String id) {
         teamspeakBot.playFile(databaseService.getFile(id));
+    }
+
+    @GetMapping("/files/{id}/download")
+    public ByteArrayResource downloadFile(@PathVariable String id) {
+        return databaseService.downloadFile(databaseService.getFile(id));
     }
 }
