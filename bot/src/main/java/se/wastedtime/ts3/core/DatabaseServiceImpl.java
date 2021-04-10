@@ -13,6 +13,8 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import se.wastedtime.ts3.Properties;
+import se.wastedtime.ts3.data.Category;
+import se.wastedtime.ts3.data.JsonCategoryWrapper;
 import se.wastedtime.ts3.data.JsonFileWrapper;
 import se.wastedtime.ts3.data.SoundFile;
 
@@ -33,6 +35,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     private final IndexService indexer;
     private final Map<String, SoundFile> soundFiles = new HashMap<>();
+    private final Map<String, Category> categoryMap = new HashMap<>();
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private File databaseFile;
 
@@ -40,6 +43,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     public DatabaseServiceImpl(Properties properties, IndexService indexer) {
         this.properties = properties;
         this.indexer = indexer;
+        loadCategories();
         loadDatabase();
         syncDatabase();
     }
@@ -90,6 +94,13 @@ public class DatabaseServiceImpl implements DatabaseService {
                 AudioFile af = AudioFileIO.read(soundFile.getAsFile());
                 soundFile.setDuration(af.getAudioHeader().getTrackLength());
 
+                if (categoryMap.containsKey(file.getName())) {
+                    Category category = categoryMap.get(file.getName());
+                        soundFile.setCategory(category.getCategory());
+                        soundFile.setDisplayName(category.getDescription());
+                }
+
+
                 soundFiles.put(file.getName(), soundFile);
                 log.info("Adding file '{}' to database", file.getName());
             }
@@ -108,5 +119,20 @@ public class DatabaseServiceImpl implements DatabaseService {
         FileUtils.touch(file);
         FileUtils.write(file, "{}", StandardCharsets.UTF_8);
         return file;
+    }
+
+    @SneakyThrows
+    private void loadCategories() {
+        System.out.println(properties.getCategories());
+        if (!new File(properties.getCategories()).exists()) {
+            throw new DatabaseException("Missing category file");
+        } else {
+            File categoriesFile = new File(properties.getCategories());
+            JsonReader reader = new JsonReader(new FileReader(categoriesFile));
+            JsonCategoryWrapper wrapper = gson.fromJson(reader, JsonCategoryWrapper.class);
+            if (wrapper.getCategories() != null) {
+                wrapper.getCategories().forEach(category -> categoryMap.put(category.getFile(), category));
+            }
+        }
     }
 }

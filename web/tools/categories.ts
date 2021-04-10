@@ -6,11 +6,11 @@ const fs = require('fs');
 interface Sound {
   file: string;
   description: string;
-  categorie: string;
+  category: string;
 }
 
 const files: Sound[] = [];
-let currentCategorie = '';
+let currentCategory = '';
 let currentDescription = '';
 let currentFile = '';
 
@@ -21,7 +21,7 @@ lineReader.eachLine('./tools/cat.html', (line: string, last: boolean) => {
 
   if (line.includes('class="tabcontent"')) {
     const jsdomCategorie = new JSDOM(line);
-    currentCategorie = jsdomCategorie.window.document.getElementsByClassName('tabcontent')[0].id;
+    currentCategory = jsdomCategorie.window.document.getElementsByClassName('tabcontent')[0].id;
   }
 
   if (divTagOpen) {
@@ -33,7 +33,7 @@ lineReader.eachLine('./tools/cat.html', (line: string, last: boolean) => {
       const end = line.substr(21).indexOf('"');
       currentFile = line.substr(21, end);
       files.push({
-        categorie: currentCategorie,
+        category: currentCategory,
         description: currentDescription,
         file: currentFile
       });
@@ -49,8 +49,10 @@ lineReader.eachLine('./tools/cat.html', (line: string, last: boolean) => {
   }
 
   if (last) {
-    console.log(files);
-    fs.writeFile('../resources/categories.json', JSON.stringify(files, null, 4), (err: NodeJS.ErrnoException | null) => {
+    const wrapper = {
+      categories: files
+    };
+    fs.writeFile('../resources/categories.json', JSON.stringify(wrapper, null, 4), (err: NodeJS.ErrnoException | null) => {
       console.log('err', err);
     });
   }
