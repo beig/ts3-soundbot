@@ -18,6 +18,12 @@ import {MatSort} from '@angular/material/sort';
 })
 export class SoundboardComponent implements OnInit, OnDestroy {
 
+  /**
+   *  TODO: -> Kategorisierung nach drachenboard.ml
+   *  TODO: -> Config für UserJoined/UserLeft/Disconnected
+   *  TODO: -> Server Sent Events
+   */
+
   private unsubscribe = new Subject<boolean>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

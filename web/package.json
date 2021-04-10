@@ -7,7 +7,8 @@
     "build": "ng build --aot --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "categories": "npx ts-node ./tools/categories.ts"
   },
   "private": true,
   "dependencies": {
@@ -23,6 +24,8 @@
     "@angular/router": "~11.2.8",
     "express": "^4.17.1",
     "howler": "^2.2.1",
+    "jsdom": "^16.5.2",
+    "line-reader": "^0.4.0",
     "material-design-icons": "^3.0.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
@@ -34,6 +37,8 @@
     "@angular/compiler-cli": "~11.2.8",
     "@types/howler": "^2.2.2",
     "@types/jasmine": "~3.6.0",
+    "@types/jsdom": "^16.2.10",
+    "@types/line-reader": "0.0.33",
     "@types/node": "^12.20.7",
     "codelyzer": "^6.0.0",
     "jasmine-core": "~3.6.0",
