@@ -14,6 +14,7 @@ import { TabData } from '../data/tab-data';
 import { SoundFile } from '../core/state/sound-file.model';
 import { BotControlComponent } from './bot-control/bot-control.component';
 import { FileEditComponent } from './file-edit/file-edit.component';
+import { CategoryStore } from '../core/state/category.store';
 
 @UntilDestroy()
 @Component({
@@ -48,6 +49,7 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
               public dialog: MatDialog,
               private soundQuery: SoundFileQuery,
               private soundService: SoundFileService,
+              private categoryStore: CategoryStore,
               private cd: ChangeDetectorRef,
               private fb: FormBuilder) {
   }
@@ -62,6 +64,7 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
     this.soundQuery.selectAll().pipe().subscribe(value => {
       value.forEach(v => {
         if (v.category) {
+          this.categoryStore.add({id: v.category});
           this._categories.add(v.category);
         }
       });

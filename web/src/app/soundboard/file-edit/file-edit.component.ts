@@ -10,6 +10,8 @@ import { map, startWith, take } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SoundFileQuery } from '../../core/state/sound-file.query';
 import { SoundFileService } from '../../core/state/sound-file.service';
+import { CategoryQuery } from '../../core/state/category.query';
+import { Category } from '../../core/state/category.model';
 
 @UntilDestroy()
 @Component({
@@ -31,14 +33,17 @@ export class FileEditComponent implements OnInit {
   tags: string[] = [];
   description = '';
   descriptionControl: FormControl;
+  category: Category;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: SoundFile,
               private query: SoundFileQuery,
               private service: SoundFileService,
+              public categoryQuery: CategoryQuery,
               public dialogRef: MatDialogRef<FileEditComponent>) {
     this.tags.push(...data.tags);
     this.description = data.description;
     this.descriptionControl = new FormControl(this.description);
+    this.category = this.categoryQuery.getEntity(data.category)!;
 
     this.descriptionControl.valueChanges.pipe(untilDestroyed(this)).subscribe(value => {
       this.description = value;
@@ -102,12 +107,12 @@ export class FileEditComponent implements OnInit {
     this.data = {
       ...this.data,
       description: this.description,
-      tags: this.tags
+      tags: this.tags,
+      category: this.category.id
     };
-    this.service.update(this.data.name, this.data).pipe(take(1)).subscribe(value => {
-      console.log(value);
+    this.service.update(this.data.name, this.data).pipe(take(1)).subscribe(() => {
+      this.dialogRef.close();
     });
-    this.dialogRef.close();
   }
 
   private _filter(value: string): string[] {
