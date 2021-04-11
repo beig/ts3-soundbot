@@ -1,0 +1,43 @@
+<div class="container">
+  <h1 mat-dialog-title>{{data.name}}</h1>
+  <div mat-dialog-content>
+    <div class="description">
+      <mat-form-field class="tag-list">
+        <mat-label>Beschreibung</mat-label>
+        <input matInput placeholder="Beschreibung eingeben ..." [formControl]="descriptionControl">
+      </mat-form-field>
+    </div>
+
+    <mat-form-field class="tag-list">
+      <mat-label>Tags</mat-label>
+      <mat-chip-list #chipList>
+        <mat-chip
+          *ngFor="let tag of tags"
+          [selectable]="selectable"
+          [removable]="removable"
+          (removed)="remove(tag)">
+          {{tag}}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="Neuer Tag ..."
+          #tagInput
+          [formControl]=" tagCtrl"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event)">
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+          {{tag}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+  </div>
+  <div mat-dialog-actions class="action-container">
+    <button (click)="cancel()" mat-raised-button color="warn">Abbrechen</button>
+    <button (click)="save()" mat-raised-button color="primary">Speichern</button>
+  </div>
+</div>

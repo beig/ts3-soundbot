@@ -13,7 +13,10 @@ export class SoundFileStore extends EntityStore<SoundFileState> {
     super();
   }
 
-  akitaPreAddEntity(newEntity: any): getEntityType<SoundFileState> {
+  akitaPreAddEntity(newEntity: SoundFile): getEntityType<SoundFileState> {
+    if (!newEntity.tags) {
+      newEntity.tags = [];
+    }
     return super.akitaPreAddEntity(newEntity);
   }
 

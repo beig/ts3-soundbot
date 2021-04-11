@@ -13,6 +13,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TabData } from '../data/tab-data';
 import { SoundFile } from '../core/state/sound-file.model';
 import { BotControlComponent } from './bot-control/bot-control.component';
+import { FileEditComponent } from './file-edit/file-edit.component';
 
 @UntilDestroy()
 @Component({
@@ -30,7 +31,7 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
   @ViewChildren(MatPaginator) paginators: QueryList<MatPaginator>;
   @ViewChildren(MatSort) sorts: QueryList<MatSort>;
 
-  displayedColumns: string[] = ['name', 'description', 'duration', 'play', 'playLocal'];
+  displayedColumns: string[] = ['name', 'description', 'duration', 'play', 'playLocal', 'edit'];
   filterForm!: FormGroup;
   health = this.core.health;
   status = Status;
@@ -103,7 +104,8 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
           return true;
         }
         const matchDescription = data.description === null ? false : data.description.toLowerCase().includes(filter);
-        return data.name.toLowerCase().includes(filter) || matchDescription;
+        const matchTags = data.tags.includes(filter);
+        return data.name.toLowerCase().includes(filter) || matchDescription || matchTags;
       };
     }
 
@@ -117,6 +119,10 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
 
   showBotControl(): void {
     this.dialog.open(BotControlComponent);
+  }
+
+  openSettings(file: SoundFile): void {
+    this.dialog.open(FileEditComponent, {data: file});
   }
 
   async playFile(file: SoundFile): Promise<void> {

@@ -25,7 +25,7 @@ public class SoundBotApplication extends WebSecurityConfigurerAdapter implements
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().authorizeRequests().anyRequest().permitAll();
+        http.cors().and().csrf().disable();
     }
 
 }

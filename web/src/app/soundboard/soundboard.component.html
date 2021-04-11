@@ -62,6 +62,16 @@
             </td>
           </ng-container>
 
+          <ng-container matColumnDef="edit">
+            <th *matHeaderCellDef mat-header-cell style="width: 5%">Editieren</th>
+            <td *matCellDef="let row" mat-cell style="width: 5%">
+              <button mat-icon-button (click)="openSettings(row)" color="accent">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </td>
+
+          </ng-container>
+
           <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
           <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 
@@ -71,7 +81,8 @@
           </tr>
         </table>
 
-          <mat-paginator showFirstLastButtons="true" [id]="data.category" [pageSizeOptions]="[10, 25, 100, data.filesCount]"></mat-paginator>
+        <mat-paginator showFirstLastButtons="true" [id]="data.category"
+                       [pageSizeOptions]="[10, 25, 100, data.filesCount]"></mat-paginator>
       </ng-container>
     </div>
   </mat-tab>

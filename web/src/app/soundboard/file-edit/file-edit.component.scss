@@ -1,0 +1,20 @@
+.container {
+  width: 500px;
+}
+
+.tag-list {
+  width: 100%;
+}
+
+.description {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.action-container {
+  display: flex;
+
+  button:nth-child(2) {
+    margin-left: auto;
+  }
+}
