@@ -16,7 +16,7 @@ let currentFile = '';
 
 let divTagOpen = false;
 
-lineReader.eachLine('./tools/cat.html', (line: string, last: boolean) => {
+lineReader.eachLine('./cat.html', (line: string, last: boolean) => {
   line = line.trim();
 
   if (line.includes('class="tabcontent"')) {
@@ -52,7 +52,7 @@ lineReader.eachLine('./tools/cat.html', (line: string, last: boolean) => {
     const wrapper = {
       categories: files
     };
-    fs.writeFile('../resources/categories.json', JSON.stringify(wrapper, null, 4), (err: NodeJS.ErrnoException | null) => {
+    fs.writeFile('../categories.json', JSON.stringify(wrapper, null, 4), (err: NodeJS.ErrnoException | null) => {
       console.log('err', err);
     });
   }

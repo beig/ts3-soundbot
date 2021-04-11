@@ -24,9 +24,9 @@ interface TabData {
 export class SoundboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private static SEARCH = 'SUCHE';
+  private static UNKNOWN = 'UNBEKANNTE';
 
   /**
-   *  TODO: -> Kategorisierung nach drachenboard.ml
    *  TODO: -> Config für UserJoined/UserLeft/Disconnected
    *  TODO: -> Server Sent Events
    */
@@ -54,7 +54,7 @@ export class SoundboardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     const array = [SoundboardComponent.SEARCH];
     array.push(...Array.from(this._categories.keys()));
-    array.push('UNBEKANNTE');
+    array.push(SoundboardComponent.UNKNOWN);
     return array;
   }
 
@@ -71,13 +71,14 @@ export class SoundboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.core.soundFiles$.subscribe(value => {
       value.forEach(v => {
-        this._categories.add(v.category);
+        if (v.category) {
+          this._categories.add(v.category);
+        }
       });
     });
 
     this.filterForm.controls.inputFilter.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe((value: string) => {
       this.selectedIndex = 0;
-      this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.data = this.core.soundFiles;
       this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.filter = value.trim().toLowerCase() || 'NULL';
       this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.paginator?.firstPage();
     });
@@ -86,14 +87,13 @@ export class SoundboardComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     this.core.soundFiles$.subscribe(value => {
       this.categories.forEach((c: string) => {
-        const files = value.filter(f => f.category === c);
+        let files;
+        if (c === SoundboardComponent.UNKNOWN) {
+          files = value.filter(f => !f.category);
+        } else {
+          files = value.filter(f => f.category === c);
+        }
         const dataSource = new MatTableDataSource<SoundFile>(files);
-        dataSource.filterPredicate = (data: SoundFile, filter: string) => {
-          if (filter === 'NULL') {
-            return false;
-          }
-          return data.name.includes(filter) || data.description.includes(filter);
-        };
 
         this.tabData.set(c, {
           category: c,
@@ -101,6 +101,14 @@ export class SoundboardComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         this.soundFilesCount.push(files.length);
         this.tabDataPure.push(this.tabData.get(c)!);
+
+        if (c === SoundboardComponent.SEARCH) {
+          this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.filterPredicate = (data: SoundFile, filter: string) => {
+            const matchDescription = data.description === null ? false : data.description.toLowerCase().includes(filter);
+            return data.name.toLowerCase().includes(filter) || matchDescription;
+          };
+          this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.data = this.core.soundFiles;
+        }
       });
       this.setUpPaginatorSort();
     });
