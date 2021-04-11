@@ -7,14 +7,14 @@ import { Status } from '../data/health';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { EventService } from '../core/event.service';
-import { SoundFileQuery } from '../core/state/sound-file.query';
-import { SoundFileService } from '../core/state/sound-file.service';
+import { SoundFileQuery } from '../core/state/sound-file/sound-file.query';
+import { SoundFileService } from '../core/state/sound-file/sound-file.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TabData } from '../data/tab-data';
-import { SoundFile } from '../core/state/sound-file.model';
+import { SoundFile } from '../core/state/sound-file/sound-file.model';
 import { BotControlComponent } from './bot-control/bot-control.component';
 import { FileEditComponent } from './file-edit/file-edit.component';
-import { CategoryStore } from '../core/state/category.store';
+import { CategoryStore } from '../core/state/category/category.store';
 
 @UntilDestroy()
 @Component({

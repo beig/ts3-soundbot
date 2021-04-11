@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Howl } from 'howler';
 import { take } from 'rxjs/operators';
 import { CoreService } from '../../core/core.service';
-import { SoundFile } from '../../core/state/sound-file.model';
+import { SoundFile } from '../../core/state/sound-file/sound-file.model';
 
 @Component({
   selector: 'app-local-audio-control',

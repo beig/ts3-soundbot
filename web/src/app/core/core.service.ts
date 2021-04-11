@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, distinctUntilChanged, filter, map, take } from 'rxjs/operators';
 import { Channel } from '../data/channel';
 import { environment } from '../../environments/environment';
-import { SoundFile } from './state/sound-file.model';
+import { SoundFile } from './state/sound-file/sound-file.model';
 
 @Injectable({
   providedIn: 'root'

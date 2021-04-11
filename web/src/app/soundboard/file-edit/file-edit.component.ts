@@ -1,6 +1,6 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { SoundFile } from '../../core/state/sound-file.model';
+import { SoundFile } from '../../core/state/sound-file/sound-file.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -8,10 +8,10 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { map, startWith, take } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { SoundFileQuery } from '../../core/state/sound-file.query';
-import { SoundFileService } from '../../core/state/sound-file.service';
-import { CategoryQuery } from '../../core/state/category.query';
-import { Category } from '../../core/state/category.model';
+import { SoundFileQuery } from '../../core/state/sound-file/sound-file.query';
+import { SoundFileService } from '../../core/state/sound-file/sound-file.service';
+import { CategoryQuery } from '../../core/state/category/category.query';
+import { Category } from '../../core/state/category/category.model';
 
 @UntilDestroy()
 @Component({
