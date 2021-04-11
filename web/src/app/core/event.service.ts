@@ -1,11 +1,14 @@
-import {Injectable, NgZone} from '@angular/core';
-import {environment} from '../../environments/environment';
-import {Observable} from 'rxjs';
+import { Injectable, NgZone } from '@angular/core';
+import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
+
+  constructor(private zone: NgZone) {
+  }
 
   get events(): Observable<MessageEvent> {
     return new Observable(observer => {
@@ -17,9 +20,6 @@ export class EventService {
         });
       };
     });
-  }
-
-  constructor(private zone: NgZone) {
   }
 
   private getEventSource(): EventSource {

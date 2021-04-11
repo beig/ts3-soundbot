@@ -1,8 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Howl} from 'howler';
-import {SoundFile} from '../../data/sound-file';
-import {take} from 'rxjs/operators';
-import {CoreService} from '../../core.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { Howl } from 'howler';
+import { take } from 'rxjs/operators';
+import { CoreService } from '../../core/core.service';
+import { SoundFile } from '../../core/state/sound-file.model';
 
 @Component({
   selector: 'app-local-audio-control',
@@ -11,18 +11,17 @@ import {CoreService} from '../../core.service';
 })
 export class LocalAudioControlComponent implements OnInit {
 
+  isPlaying = false;
+  loading = false;
   private file: SoundFile;
   private howl: Howl;
 
-  isPlaying = false;
-  loading = false;
+  constructor(private core: CoreService) {
+  }
 
   @Input()
   set audio(file: SoundFile) {
     this.file = file;
-  }
-
-  constructor(private core: CoreService) {
   }
 
   ngOnInit(): void {

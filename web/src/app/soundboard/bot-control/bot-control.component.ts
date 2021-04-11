@@ -1,12 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {CoreService} from '../../core.service';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {Health} from '../../data/health';
-import {MatSlideToggleChange} from '@angular/material/slide-toggle';
-import {take, takeUntil, tap} from 'rxjs/operators';
-import {Channel} from '../../data/channel';
-import {MatSelectChange} from '@angular/material/select';
-import {MatDialogRef} from '@angular/material/dialog';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CoreService } from '../../core/core.service';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Health } from '../../data/health';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { takeUntil, tap } from 'rxjs/operators';
+import { Channel } from '../../data/channel';
+import { MatSelectChange } from '@angular/material/select';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-bot-control',
@@ -15,13 +15,12 @@ import {MatDialogRef} from '@angular/material/dialog';
 })
 export class BotControlComponent implements OnInit, OnDestroy {
 
-  private greetings = ['servus.mp3', 'hallo.mp3', 'hallo2.mp3', 'dooochaller.mp3', 'fettiwas.mp3', 'rainer winkler.mp3'];
-  private unsubscribe = new Subject<boolean>();
-
   health!: Observable<Health>;
   online = new BehaviorSubject<boolean>(false);
   channels = new BehaviorSubject<Channel[]>([]);
   currentChannel: Channel;
+  private greetings = ['servus.mp3', 'hallo.mp3', 'hallo2.mp3', 'dooochaller.mp3', 'fettiwas.mp3', 'rainer winkler.mp3'];
+  private unsubscribe = new Subject<boolean>();
 
   constructor(private core: CoreService,
               public dialogRef: MatDialogRef<BotControlComponent>) {
@@ -54,14 +53,14 @@ export class BotControlComponent implements OnInit, OnDestroy {
       await this.core.joinChannel(event.value);
       this.currentChannel = event.value;
       this.dialogRef.close();
-      this.core.soundFiles$.pipe(take(1)).subscribe(async value => {
-        const max = Math.floor(this.greetings.length);
-        const randomFile = Math.floor(Math.random() * (max - 1) + 1);
-        const found = value.find(soundFile => soundFile.name === this.greetings[randomFile]);
-        if (found) {
-          await this.core.playFile(found).toPromise();
-        }
-      });
+      // this.core.soundFiles$.pipe(take(1)).subscribe(async value => {
+      //   const max = Math.floor(this.greetings.length);
+      //   const randomFile = Math.floor(Math.random() * (max - 1) + 1);
+      //   const found = value.find(soundFile => soundFile.name === this.greetings[randomFile]);
+      //   if (found) {
+      //     await this.core.playFile(found).toPromise();
+      //   }
+      // });
     }
   }
 
