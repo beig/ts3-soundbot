@@ -46,6 +46,7 @@ dependencies {
 	implementation 'com.github.manevolent:ffmpeg4j:4ce451b'
 
 	implementation group: 'org', name: 'jaudiotagger', version: '2.0.3'
+	implementation 'io.jsondb:jsondb-core:1.0.115-j11'
 }
 
 test {

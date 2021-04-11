@@ -12,7 +12,5 @@ public interface DatabaseService {
 
     List<SoundFile> getFiles();
 
-    void reindex();
-
     ByteArrayResource downloadFile(SoundFile file);
 }

@@ -9,9 +9,9 @@ import java.io.File;
 @Data
 @ConfigurationProperties(prefix = "bot")
 public class Properties {
+
     String soundDirectory;
-    String database;
-    String categories;
+    String databaseDirectory;
 
     @Value("${bot.sound-directory:#{null}}")
     public void setSoundDirectory(String soundDirectory) {
@@ -22,22 +22,12 @@ public class Properties {
         }
     }
 
-    @Value("${bot.database-file:#{null}}")
+    @Value("${database-file:#{null}}")
     public void setDatabase(String database) {
         if (database == null) {
-            this.database = new File("").getAbsolutePath() + File.separator + "database.json";
+            this.databaseDirectory = new File("").getAbsolutePath() + File.separator;
         } else {
-            this.database = database;
+            this.databaseDirectory = database;
         }
     }
-
-    @Value("${bot.category-file:#{null}}")
-    public void setCategories(String category) {
-        if (category == null) {
-            this.categories = new File("").getAbsolutePath() + File.separator + "categories.json";
-        } else {
-            this.categories = category;
-        }
-    }
-
 }

@@ -87,11 +87,6 @@ public class BotApi {
         return new Health("Online", databaseService.getFiles().size(), teamspeakBot.isRunning());
     }
 
-    @GetMapping("/reindex")
-    public void reindex() {
-        databaseService.reindex();
-    }
-
     @GetMapping("/files")
     public List<SoundFile> getFiles() {
         return databaseService.getFiles();
