@@ -104,6 +104,9 @@ export class SoundboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (c === SoundboardComponent.SEARCH) {
           this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.filterPredicate = (data: SoundFile, filter: string) => {
+            if (filter === 'NULL') {
+              return true;
+            }
             const matchDescription = data.description === null ? false : data.description.toLowerCase().includes(filter);
             return data.name.toLowerCase().includes(filter) || matchDescription;
           };
