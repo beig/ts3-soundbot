@@ -54,7 +54,7 @@ export class BotControlComponent implements OnInit, OnDestroy {
       await this.core.joinChannel(event.value);
       this.currentChannel = event.value;
       this.dialogRef.close();
-      this.core.soundFiles.pipe(take(1)).subscribe(async value => {
+      this.core.soundFiles$.pipe(take(1)).subscribe(async value => {
         const max = Math.floor(this.greetings.length);
         const randomFile = Math.floor(Math.random() * (max - 1) + 1);
         const found = value.find(soundFile => soundFile.fileName === this.greetings[randomFile]);

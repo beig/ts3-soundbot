@@ -13,7 +13,7 @@ import {environment} from '../environments/environment';
 export class CoreService {
 
   private url = environment.url;
-  private _soundFiles = new BehaviorSubject<SoundFile[]>([]);
+  private _soundFiles$ = new BehaviorSubject<SoundFile[]>([]);
   private _health = new BehaviorSubject<Health>({online: false, status: Status.OFFLINE, files: 0});
 
   get health(): Observable<Health> {
@@ -28,7 +28,7 @@ export class CoreService {
         let idCount = 0;
         value.forEach(soundFile => soundFile.id = ++idCount);
         return value;
-      }), take(1)).subscribe(value => this._soundFiles.next(value));
+      }), take(1)).subscribe(value => this._soundFiles$.next(value));
     });
   }
 
@@ -39,8 +39,12 @@ export class CoreService {
     setTimeout(() => this.observeStatus(), 5000);
   }
 
-  get soundFiles(): Observable<SoundFile[]> {
-    return this._soundFiles.asObservable();
+  get soundFiles$(): Observable<SoundFile[]> {
+    return this._soundFiles$.asObservable();
+  }
+
+  get soundFiles(): SoundFile[] {
+    return this._soundFiles$.getValue();
   }
 
   playFile(file: SoundFile): Observable<any> {

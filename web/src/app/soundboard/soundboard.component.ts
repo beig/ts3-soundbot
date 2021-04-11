@@ -1,22 +1,29 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {CoreService} from '../core.service';
 import {Observable, Subject} from 'rxjs';
 import {SoundFile} from '../data/sound-file';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {BotControlComponent} from './bot-control/bot-control.component';
 import {MatPaginator} from '@angular/material/paginator';
 import {Status} from '../data/health';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
+import {takeUntil} from 'rxjs/operators';
+
+interface TabData {
+  category: string;
+  dataSource: MatTableDataSource<SoundFile>;
+}
 
 @Component({
   selector: 'app-soundboard',
   templateUrl: './soundboard.component.html',
   styleUrls: ['./soundboard.component.scss']
 })
-export class SoundboardComponent implements OnInit, OnDestroy {
+export class SoundboardComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  private static SEARCH = 'SUCHE';
 
   /**
    *  TODO: -> Kategorisierung nach drachenboard.ml
@@ -26,24 +33,35 @@ export class SoundboardComponent implements OnInit, OnDestroy {
 
   private unsubscribe = new Subject<boolean>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChildren(MatPaginator) paginators: QueryList<MatPaginator>;
+  @ViewChildren(MatSort) sorts: QueryList<MatSort>;
 
+  private _categories = new Set<string>();
+  private tabData = new Map<string, TabData>();
   displayedColumns: string[] = ['id', 'name', 'duration', 'play', 'playLocal'];
   soundFiles!: Observable<SoundFile[]>;
   filterForm!: FormGroup;
   health = this.core.health;
   status = Status;
-  dataSource: MatTableDataSource<SoundFile>;
+  initialized = false;
+  selectedIndex = 0;
+  tabDataPure: TabData[] = [];
+  soundFilesCount: number[] = [];
 
-  get soundFilesCount(): number {
-    return this.dataSource.data.length;
+  get categories(): string[] {
+    if (this._categories.size === 0) {
+      return [];
+    }
+    const array = [SoundboardComponent.SEARCH];
+    array.push(...Array.from(this._categories.keys()));
+    array.push('UNBEKANNTE');
+    return array;
   }
 
   constructor(private core: CoreService,
               public dialog: MatDialog,
+              private cd: ChangeDetectorRef,
               private fb: FormBuilder) {
-    this.dataSource = new MatTableDataSource<SoundFile>([]);
   }
 
   ngOnInit(): void {
@@ -51,18 +69,33 @@ export class SoundboardComponent implements OnInit, OnDestroy {
       inputFilter: []
     });
 
-    this.core.soundFiles.subscribe(value => {
-      this.dataSource = new MatTableDataSource<SoundFile>(value);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    this.core.soundFiles$.subscribe(value => {
+      value.forEach(v => {
+        this._categories.add(v.category);
+      });
     });
 
-    this.filterForm.controls.inputFilter.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe(value => {
-      this.dataSource.filter = value.trim().toLowerCase();
+    this.filterForm.controls.inputFilter.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe((value: string) => {
+      this.selectedIndex = 0;
+      this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.data = this.core.soundFiles;
+      this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.filter = value.trim().toLowerCase();
+      this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.paginator?.firstPage();
+    });
+  }
 
-      if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
-      }
+  ngAfterViewInit(): void {
+    this.core.soundFiles$.subscribe(value => {
+      this.categories.forEach((c: string) => {
+        const files = value.filter(f => f.category === c);
+        const dataSource = new MatTableDataSource<SoundFile>(files);
+        this.tabData.set(c, {
+          category: c,
+          dataSource
+        });
+        this.soundFilesCount.push(files.length);
+        this.tabDataPure.push(this.tabData.get(c)!);
+      });
+      this.setUpPaginatorSort();
     });
   }
 
@@ -77,5 +110,16 @@ export class SoundboardComponent implements OnInit, OnDestroy {
 
   async playFile(file: SoundFile): Promise<void> {
     await this.core.playFile(file).toPromise();
+  }
+
+  private setUpPaginatorSort(): void {
+    this.selectedIndex = 1;
+    this.cd.detectChanges();
+    this.categories.forEach((value: string, index: number) => {
+      this.tabData.get(value)!.dataSource.paginator = this.paginators.get(index) || null;
+      this.tabData.get(value)!.dataSource.sort = this.sorts.get(index) || null;
+    });
+    this.initialized = true;
+    this.cd.detectChanges();
   }
 }

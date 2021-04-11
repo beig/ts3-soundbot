@@ -24,48 +24,57 @@
   </mat-form-field>
 </form>
 
-<div class="mat-elevation-z8">
-  <table [dataSource]="dataSource" mat-table matSort>
+<mat-tab-group [(selectedIndex)]="selectedIndex">
+  <mat-tab *ngFor="let data of tabDataPure" [label]="data.category | uppercase">
+    <div class="mat-elevation-z8">
+      <ng-container>
 
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-      <td mat-cell *matCellDef="let row">{{row.id}}</td>
-    </ng-container>
+        <table [dataSource]="data.dataSource" mat-table matSort>
 
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-      <td mat-cell *matCellDef="let row">{{row.fileName}}</td>
-    </ng-container>
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+            <td mat-cell *matCellDef="let row">{{row.id}}</td>
+          </ng-container>
 
-    <ng-container matColumnDef="duration">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Duration</th>
-      <td mat-cell *matCellDef="let row">{{row.duration}} seconds</td>
-    </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td mat-cell *matCellDef="let row">{{row.fileName}}</td>
+          </ng-container>
 
-    <ng-container matColumnDef="play">
-      <th mat-header-cell *matHeaderCellDef>Play</th>
-      <td mat-cell *matCellDef="let row">
-        <button (click)="playFile(row)" mat-mini-fab color="warn">
-          <mat-icon>play_arrow</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+          <ng-container matColumnDef="duration">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Duration</th>
+            <td mat-cell *matCellDef="let row">{{row.duration}} seconds</td>
+          </ng-container>
 
-    <ng-container matColumnDef="playLocal">
-      <th mat-header-cell *matHeaderCellDef>Lokal wiedergeben</th>
-      <td mat-cell *matCellDef="let row">
-        <app-local-audio-control [audio]="row"></app-local-audio-control>
-      </td>
-    </ng-container>
+          <ng-container matColumnDef="play">
+            <th mat-header-cell *matHeaderCellDef>Play</th>
+            <td mat-cell *matCellDef="let row">
+              <button (click)="playFile(row)" mat-mini-fab color="warn">
+                <mat-icon>play_arrow</mat-icon>
+              </button>
+            </td>
+          </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <ng-container matColumnDef="playLocal">
+            <th mat-header-cell *matHeaderCellDef>Lokal wiedergeben</th>
+            <td mat-cell *matCellDef="let row">
+              <app-local-audio-control [audio]="row"></app-local-audio-control>
+            </td>
+          </ng-container>
 
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="4">No data matching the filter "{{filterForm.controls.inputFilter.value}}"</td>
-    </tr>
-  </table>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
-  <mat-paginator [pageSizeOptions]="[10, 25, 100, soundFilesCount]"></mat-paginator>
-</div>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{filterForm.controls.inputFilter.value}}"
+            </td>
+          </tr>
+        </table>
+
+        <mat-paginator *ngIf="initialized" [pageSizeOptions]="[10, 25, 100, soundFilesCount[selectedIndex]]"></mat-paginator>
+      </ng-container>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+
 
