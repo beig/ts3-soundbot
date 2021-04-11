@@ -60,7 +60,7 @@ public class DatabaseServiceImpl implements DatabaseService {
         JsonReader reader = new JsonReader(new FileReader(databaseFile));
         JsonFileWrapper wrapper = gson.fromJson(reader, JsonFileWrapper.class);
         if (wrapper.getFiles() != null)
-            wrapper.getFiles().forEach(soundFile -> soundFiles.put(soundFile.getFileName(), soundFile));
+            wrapper.getFiles().forEach(soundFile -> soundFiles.put(soundFile.getName(), soundFile));
     }
 
     @Override
@@ -89,7 +89,7 @@ public class DatabaseServiceImpl implements DatabaseService {
         for (File file : this.indexer.getSoundFiles()) {
             if (!soundFiles.containsKey(file.getName())) {
                 SoundFile soundFile = new SoundFile();
-                soundFile.setFileName(file.getName());
+                soundFile.setName(file.getName());
                 soundFile.setPath(file.getPath());
                 AudioFile af = AudioFileIO.read(soundFile.getAsFile());
                 soundFile.setDuration(af.getAudioHeader().getTrackLength());
@@ -97,7 +97,7 @@ public class DatabaseServiceImpl implements DatabaseService {
                 if (categoryMap.containsKey(file.getName())) {
                     Category category = categoryMap.get(file.getName());
                         soundFile.setCategory(category.getCategory());
-                        soundFile.setDisplayName(category.getDescription());
+                        soundFile.setDescription(category.getDescription());
                 }
 
 

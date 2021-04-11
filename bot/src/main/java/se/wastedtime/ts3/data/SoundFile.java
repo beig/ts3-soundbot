@@ -9,10 +9,10 @@ import java.util.List;
 
 @Data
 public class SoundFile {
-    String fileName;
+    String name;
     String path;
     int duration;
-    String displayName;
+    String description;
     String category;
     List<String> tags;
 

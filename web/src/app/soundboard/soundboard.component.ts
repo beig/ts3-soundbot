@@ -38,7 +38,7 @@ export class SoundboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _categories = new Set<string>();
   private tabData = new Map<string, TabData>();
-  displayedColumns: string[] = ['id', 'name', 'duration', 'play', 'playLocal'];
+  displayedColumns: string[] = ['id', 'name', 'description', 'duration', 'play', 'playLocal'];
   soundFiles!: Observable<SoundFile[]>;
   filterForm!: FormGroup;
   health = this.core.health;
@@ -78,7 +78,7 @@ export class SoundboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.filterForm.controls.inputFilter.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe((value: string) => {
       this.selectedIndex = 0;
       this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.data = this.core.soundFiles;
-      this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.filter = value.trim().toLowerCase();
+      this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.filter = value.trim().toLowerCase() || 'NULL';
       this.tabData.get(SoundboardComponent.SEARCH)!.dataSource.paginator?.firstPage();
     });
   }
@@ -88,6 +88,13 @@ export class SoundboardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.categories.forEach((c: string) => {
         const files = value.filter(f => f.category === c);
         const dataSource = new MatTableDataSource<SoundFile>(files);
+        dataSource.filterPredicate = (data: SoundFile, filter: string) => {
+          if (filter === 'NULL') {
+            return false;
+          }
+          return data.name.includes(filter) || data.description.includes(filter);
+        };
+
         this.tabData.set(c, {
           category: c,
           dataSource
@@ -113,7 +120,6 @@ export class SoundboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setUpPaginatorSort(): void {
-    this.selectedIndex = 1;
     this.cd.detectChanges();
     this.categories.forEach((value: string, index: number) => {
       this.tabData.get(value)!.dataSource.paginator = this.paginators.get(index) || null;

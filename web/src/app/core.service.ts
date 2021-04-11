@@ -48,11 +48,11 @@ export class CoreService {
   }
 
   playFile(file: SoundFile): Observable<any> {
-    return this.http.get(`${this.url}/files/${file.fileName}/play`);
+    return this.http.get(`${this.url}/files/${file.name}/play`);
   }
 
   downloadFile(file: SoundFile): Observable<Blob> {
-    return this.http.get(`${this.url}/files/${file.fileName}/download`, {responseType: 'blob'});
+    return this.http.get(`${this.url}/files/${file.name}/download`, {responseType: 'blob'});
   }
 
   async toggleConnection(value: boolean): Promise<void> {
