@@ -12,5 +12,7 @@ public interface DatabaseService {
 
     List<SoundFile> getFiles();
 
+    SoundFile updateFile(SoundFile file);
+
     ByteArrayResource downloadFile(SoundFile file);
 }

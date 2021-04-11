@@ -32,13 +32,13 @@ public class TeamspeakFastMixerSink implements OpusMixerSink, Microphone {
     private final Queue<OpusPacket> packetQueue = new ConcurrentLinkedQueue<>();
     private final int bufferSize; // Buffer size, in samples
     private final float[] sampleBuffer; // ASIO buffer
+    private final long waitTime = 0;
     private volatile OpusEncoder encoder = null; // Opus encoder instance
     private long opusPacketsEncoded = 0, opusPacketsSent = 0;
     private long opusTime = 0;
     private long networkTime = 0;
     private long opusPosition = 0;
     private long opusBytePosition = 0;
-    private final long waitTime = 0;
     // Statistics variables
     private long underflowed = 0; // Underflowed samples (ASIO has to return 0 samples to the encoder)
     private long overflowed = 0; // Overflowed samples (write returns 0)

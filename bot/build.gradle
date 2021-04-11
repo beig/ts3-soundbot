@@ -47,6 +47,8 @@ dependencies {
 
 	implementation group: 'org', name: 'jaudiotagger', version: '2.0.3'
 	implementation 'io.jsondb:jsondb-core:1.0.115-j11'
+	implementation group: 'org.springframework', name: 'spring-webflux', version: '5.3.5'
+
 }
 
 test {

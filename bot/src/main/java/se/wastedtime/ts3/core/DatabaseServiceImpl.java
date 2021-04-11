@@ -8,6 +8,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import se.wastedtime.ts3.Properties;
+import se.wastedtime.ts3.api.EventEmitter;
 import se.wastedtime.ts3.data.SoundFile;
 
 import java.util.List;
@@ -19,12 +20,14 @@ public class DatabaseServiceImpl implements DatabaseService {
     private final Properties properties;
 
     private final IndexService indexer;
+    private final EventEmitter eventEmitter;
     private JsonDBTemplate jsonDB;
 
     @Autowired
-    public DatabaseServiceImpl(Properties properties, IndexService indexer) {
+    public DatabaseServiceImpl(Properties properties, IndexService indexer, EventEmitter eventEmitter) {
         this.properties = properties;
         this.indexer = indexer;
+        this.eventEmitter = eventEmitter;
         loadDatabase();
     }
 
@@ -45,6 +48,13 @@ public class DatabaseServiceImpl implements DatabaseService {
     @Override
     public List<SoundFile> getFiles() {
         return jsonDB.findAll(SoundFile.class);
+    }
+
+    @Override
+    public SoundFile updateFile(SoundFile file) {
+        jsonDB.upsert(file);
+        this.eventEmitter.publishFileEvent(file);
+        return file;
     }
 
     @Override

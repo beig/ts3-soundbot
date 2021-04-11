@@ -102,6 +102,11 @@ public class BotApi {
         teamspeakBot.playFile(databaseService.getFile(id));
     }
 
+    @PostMapping("/files/{id}")
+    public SoundFile updateFile(@PathVariable String id, @RequestBody SoundFile body) {
+        return databaseService.updateFile(body);
+    }
+
     @GetMapping("/files/{id}/download")
     public ByteArrayResource downloadFile(@PathVariable String id) {
         return databaseService.downloadFile(databaseService.getFile(id));

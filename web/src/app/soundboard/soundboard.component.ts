@@ -10,6 +10,7 @@ import {Status} from '../data/health';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {takeUntil} from 'rxjs/operators';
+import {EventService} from '../core/event.service';
 
 interface TabData {
   category: string;
@@ -59,12 +60,16 @@ export class SoundboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   constructor(private core: CoreService,
+              private events: EventService,
               public dialog: MatDialog,
               private cd: ChangeDetectorRef,
               private fb: FormBuilder) {
   }
 
   ngOnInit(): void {
+    this.events.events.subscribe(value => {
+      console.log('value', value);
+    });
     this.filterForm = this.fb.group({
       inputFilter: []
     });
