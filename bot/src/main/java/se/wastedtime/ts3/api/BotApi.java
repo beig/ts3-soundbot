@@ -12,6 +12,7 @@ import se.wastedtime.ts3.bot.TeamspeakBotImpl;
 import se.wastedtime.ts3.core.DatabaseService;
 import se.wastedtime.ts3.data.Health;
 import se.wastedtime.ts3.data.SoundFile;
+import se.wastedtime.ts3.data.SoundFileUpdate;
 
 import java.util.List;
 
@@ -87,11 +88,6 @@ public class BotApi {
         return new Health("Online", databaseService.getFiles().size(), teamspeakBot.isRunning());
     }
 
-    @GetMapping("/reindex")
-    public void reindex() {
-        databaseService.reindex();
-    }
-
     @GetMapping("/files")
     public List<SoundFile> getFiles() {
         return databaseService.getFiles();
@@ -105,6 +101,11 @@ public class BotApi {
     @GetMapping("/files/{id}/play")
     public void playFile(@PathVariable String id) {
         teamspeakBot.playFile(databaseService.getFile(id));
+    }
+
+    @PutMapping("/files/{id}")
+    public SoundFile updateFile(@PathVariable String id, @RequestBody SoundFileUpdate body) {
+        return databaseService.updateFile(body);
     }
 
     @GetMapping("/files/{id}/download")

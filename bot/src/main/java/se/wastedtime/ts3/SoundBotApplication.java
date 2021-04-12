@@ -19,13 +19,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @CrossOrigin
 public class SoundBotApplication extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().authorizeRequests().anyRequest().permitAll();
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(SoundBotApplication.class, args);
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable();
     }
 
 }

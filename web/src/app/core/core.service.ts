@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Health, Status} from './data/health';
-import {BehaviorSubject, Observable, of} from 'rxjs';
-import {catchError, distinctUntilChanged, filter, map, take} from 'rxjs/operators';
-import {SoundFile} from './data/sound-file';
-import {Channel} from './data/channel';
-import {environment} from '../environments/environment';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Health, Status } from '../data/health';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, map, take } from 'rxjs/operators';
+import { Channel } from '../data/channel';
+import { environment } from '../../environments/environment';
+import { SoundFile } from './state/sound-file/sound-file.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,38 +13,23 @@ import {environment} from '../environments/environment';
 export class CoreService {
 
   private url = environment.url;
-  private _soundFiles$ = new BehaviorSubject<SoundFile[]>([]);
-  private _health = new BehaviorSubject<Health>({online: false, status: Status.OFFLINE, files: 0});
-
-  get health(): Observable<Health> {
-    return this._health.asObservable();
-  }
 
   constructor(private http: HttpClient) {
     this.observeStatus();
     this._health.pipe(distinctUntilChanged((x, y) => x.status === y.status),
       filter(value => value.status === Status.ONLINE)).subscribe(() => {
-      this.getFiles().pipe(map(value => {
-        let idCount = 0;
-        value.forEach(soundFile => soundFile.id = ++idCount);
-        return value;
-      }), take(1)).subscribe(value => this._soundFiles$.next(value));
+      // this.getFiles().pipe(map(value => {
+      //   let idCount = 0;
+      //   value.forEach(soundFile => soundFile.id = ++idCount);
+      //   return value;
+      // }), take(1)).subscribe(value => this._soundFiles$.next(value));
     });
   }
 
-  private observeStatus(): void {
-    this.status().pipe(take(1)).subscribe(value => {
-      this._health.next(value);
-    });
-    setTimeout(() => this.observeStatus(), 5000);
-  }
+  private _health = new BehaviorSubject<Health>({online: false, status: Status.OFFLINE, files: 0});
 
-  get soundFiles$(): Observable<SoundFile[]> {
-    return this._soundFiles$.asObservable();
-  }
-
-  get soundFiles(): SoundFile[] {
-    return this._soundFiles$.getValue();
+  get health(): Observable<Health> {
+    return this._health.asObservable();
   }
 
   playFile(file: SoundFile): Observable<any> {
@@ -79,6 +64,13 @@ export class CoreService {
     await this.http.get(`${this.url}/ts3/restart`).toPromise();
   }
 
+  private observeStatus(): void {
+    this.status().pipe(take(1)).subscribe(value => {
+      this._health.next(value);
+    });
+    setTimeout(() => this.observeStatus(), 5000);
+  }
+
   private status(): Observable<Health> {
     return this.http.get<Health>(`${this.url}/status`).pipe(catchError(() => {
       const health: Health = {
@@ -88,9 +80,5 @@ export class CoreService {
       };
       return of(health);
     }));
-  }
-
-  private getFiles(): Observable<SoundFile[]> {
-    return this.http.get<SoundFile[]>(`${this.url}/files`);
   }
 }

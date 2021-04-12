@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  url: 'http://localhost:32601/api'
+  url: 'http://localhost:4200/api',
+  events: 'http://localhost:4200/event-stream'
 };
 
 /*

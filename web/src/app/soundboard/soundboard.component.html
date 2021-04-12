@@ -2,81 +2,86 @@
   <span>wastedtime.se - Soundboard</span>
   <span class="spacer"></span>
 
-  <button [disabled]="(health|async)?.status === status.OFFLINE" (click)="showBotControl()" mat-raised-button
-          color="accent">Bot Control
+  <button (click)="showBotControl()" [disabled]="(health|async)?.status === status.OFFLINE" color="accent"
+          mat-raised-button>Bot Control
   </button>
 
   <span class="spacer"></span>
   {{(health | async)?.status}}
-  <button mat-icon-button>
-    <mat-icon>menu</mat-icon>
-  </button>
 </mat-toolbar>
 
-<form class="example-form" [formGroup]="filterForm" autocomplete="off">
+<mat-progress-bar *ngIf="loading" color="warn" mode="query"></mat-progress-bar>
+
+<form [formGroup]="filterForm" autocomplete="off" class="example-form">
   <mat-form-field class="example-full-width">
     <mat-label>Search files ...</mat-label>
-    <input type="text"
-           class="filter-input"
-           placeholder="Search file ..."
+    <input class="filter-input"
+           formControlName="inputFilter"
            matInput
-           formControlName="inputFilter">
+           placeholder="Search file ..."
+           type="text">
   </mat-form-field>
 </form>
 
 <mat-tab-group [(selectedIndex)]="selectedIndex">
-  <mat-tab *ngFor="let data of tabDataPure" [label]="data.category | uppercase">
+  <mat-tab *ngFor="let data of tabData" [label]="data.category | uppercase">
     <div class="mat-elevation-z8">
       <ng-container>
 
         <table [dataSource]="data.dataSource" mat-table matSort>
 
-          <ng-container matColumnDef="id">
-            <th style="width: 5%" mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-            <td style="width: 5%" mat-cell *matCellDef="let row">{{row.id}}</td>
-          </ng-container>
-
           <ng-container matColumnDef="name">
-            <th style="width: 10%" mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-            <td style="width: 10%" mat-cell *matCellDef="let row">{{row.name}}</td>
+            <th *matHeaderCellDef mat-header-cell mat-sort-header style="width: 10%">Name</th>
+            <td *matCellDef="let row" mat-cell style="width: 10%">{{row.name}}</td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-            <td mat-cell *matCellDef="let row">{{row.description}}</td>
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Description</th>
+            <td *matCellDef="let row" mat-cell>{{row.description}}</td>
           </ng-container>
 
           <ng-container matColumnDef="duration">
-            <th style="width: 10%" mat-header-cell *matHeaderCellDef mat-sort-header>Duration</th>
-            <td style="width: 10%" mat-cell *matCellDef="let row">{{row.duration}} seconds</td>
+            <th *matHeaderCellDef mat-header-cell mat-sort-header style="width: 10%">Duration</th>
+            <td *matCellDef="let row" mat-cell style="width: 10%">{{row.duration}} seconds</td>
           </ng-container>
 
           <ng-container matColumnDef="play">
-            <th style="width: 5%" mat-header-cell *matHeaderCellDef>Play</th>
-            <td style="width: 5%" mat-cell *matCellDef="let row">
-              <button (click)="playFile(row)" mat-mini-fab color="warn">
+            <th *matHeaderCellDef mat-header-cell style="width: 5%">Play</th>
+            <td *matCellDef="let row" mat-cell style="width: 5%">
+              <button (click)="playFile(row)" color="warn" mat-mini-fab>
                 <mat-icon>play_arrow</mat-icon>
               </button>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="playLocal">
-            <th style="width: 5%" mat-header-cell *matHeaderCellDef>Lokal wiedergeben</th>
-            <td style="width: 5%" mat-cell *matCellDef="let row">
+            <th *matHeaderCellDef mat-header-cell style="width: 5%">Lokal wiedergeben</th>
+            <td *matCellDef="let row" mat-cell style="width: 5%">
               <app-local-audio-control [audio]="row"></app-local-audio-control>
             </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <ng-container matColumnDef="edit">
+            <th *matHeaderCellDef mat-header-cell style="width: 5%">Editieren</th>
+            <td *matCellDef="let row" mat-cell style="width: 5%">
+              <button mat-icon-button (click)="openSettings(row)" color="accent">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </td>
 
-          <tr class="mat-row" *matNoDataRow>
+          </ng-container>
+
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+
+          <tr *matNoDataRow class="mat-row">
             <td class="mat-cell" colspan="4">No data matching the filter "{{filterForm.controls.inputFilter.value}}"
             </td>
           </tr>
         </table>
 
-        <mat-paginator *ngIf="initialized" [pageSizeOptions]="[10, 25, 100, soundFilesCount[selectedIndex]]"></mat-paginator>
+        <mat-paginator showFirstLastButtons="true" [id]="data.category"
+                       [pageSizeOptions]="[10, 25, 100, data.filesCount]"></mat-paginator>
       </ng-container>
     </div>
   </mat-tab>
