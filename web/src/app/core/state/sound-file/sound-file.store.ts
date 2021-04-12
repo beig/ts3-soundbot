@@ -21,6 +21,9 @@ export class SoundFileStore extends EntityStore<SoundFileState> {
   }
 
   akitaPreUpdateEntity(_: Readonly<getEntityType<SoundFileState>>, nextEntity: any): getEntityType<SoundFileState> {
+    if (!nextEntity.tags) {
+      nextEntity.tags = [];
+    }
     return super.akitaPreUpdateEntity(_, nextEntity);
   }
 }
