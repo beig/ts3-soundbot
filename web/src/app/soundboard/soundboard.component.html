@@ -54,6 +54,11 @@
             <td *matCellDef="let row" mat-cell style="width: 10%">{{row.duration}} seconds</td>
           </ng-container>
 
+          <ng-container matColumnDef="count">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header style="width: 10%">#</th>
+            <td *matCellDef="let row" mat-cell style="width: 10%">{{row.playCount}}</td>
+          </ng-container>
+
           <ng-container matColumnDef="play">
             <th *matHeaderCellDef mat-header-cell style="width: 5%">Play</th>
             <td *matCellDef="let row" mat-cell style="width: 5%">

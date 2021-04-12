@@ -100,7 +100,9 @@ public class BotApi {
 
     @GetMapping("/files/{id}/play")
     public void playFile(@PathVariable String id) {
-        teamspeakBot.playFile(databaseService.getFile(id));
+        SoundFile file = databaseService.getFile(id);
+        databaseService.incPlayCount(file);
+        teamspeakBot.playFile(file);
     }
 
     @PutMapping("/files/{id}")

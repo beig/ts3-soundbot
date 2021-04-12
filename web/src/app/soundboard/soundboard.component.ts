@@ -32,7 +32,7 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
   @ViewChildren(MatPaginator) paginators: QueryList<MatPaginator>;
   @ViewChildren(MatSort) sorts: QueryList<MatSort>;
 
-  displayedColumns: string[] = ['name', 'description', 'duration', 'play', 'playLocal', 'edit'];
+  displayedColumns: string[] = ['name', 'description', 'duration', 'count', 'play', 'playLocal', 'edit'];
   filterForm!: FormGroup;
   health = this.core.health;
   status = Status;
@@ -49,6 +49,7 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
   /**
    *  TODO: -> StatusStore
    *  TODO: -> Config für UserJoined/UserLeft/Disconnected
+   *  TODO: -> LocalStore Favorites
    */
 
   constructor(private core: CoreService,

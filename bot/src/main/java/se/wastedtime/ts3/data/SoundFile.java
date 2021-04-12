@@ -33,6 +33,7 @@ public class SoundFile {
     String description;
     String category;
     List<String> tags;
+    int playCount;
     boolean softDeleted;
 
     @JsonIgnore

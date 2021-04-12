@@ -16,10 +16,15 @@ export class EventService {
   constructor(private zone: NgZone, private soundStore: SoundFileStore) {
     this.events.subscribe(value => {
       const eventData: EventData = JSON.parse(value.data);
-      if (eventData.clientId !== EventService.CLIENT_ID) {
-        const update: SoundFile = eventData.payload;
+      const update: SoundFile = eventData.payload;
+      if (eventData.clientId) {
+        if (eventData.clientId && eventData.clientId !== EventService.CLIENT_ID) {
+          this.soundStore.update(update.name, update);
+        }
+      } else {
         this.soundStore.update(update.name, update);
       }
+
     });
   }
 

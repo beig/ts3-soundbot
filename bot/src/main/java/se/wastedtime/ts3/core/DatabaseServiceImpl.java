@@ -54,9 +54,18 @@ public class DatabaseServiceImpl implements DatabaseService {
     @Override
     public SoundFile updateFile(SoundFileUpdate file) {
         SoundFile soundFile = new SoundFile(file);
+        soundFile.setPlayCount(jsonDB.findById(file.getName(), SoundFile.class).getPlayCount());
         jsonDB.upsert(soundFile);
         this.eventEmitter.publishFileEvent(file);
         return soundFile;
+    }
+
+    @Override
+    public SoundFile incPlayCount(SoundFile file) {
+        file.setPlayCount(file.getPlayCount() + 1);
+        jsonDB.upsert(file);
+        this.eventEmitter.publishFileEvent(file);
+        return null;
     }
 
     @Override

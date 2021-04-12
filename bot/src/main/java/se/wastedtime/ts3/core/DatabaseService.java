@@ -15,5 +15,7 @@ public interface DatabaseService {
 
     SoundFile updateFile(SoundFileUpdate file);
 
+    SoundFile incPlayCount(SoundFile file);
+
     ByteArrayResource downloadFile(SoundFile file);
 }
