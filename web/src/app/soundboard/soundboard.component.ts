@@ -14,6 +14,7 @@ import { BotControlComponent } from './bot-control/bot-control.component';
 import { FileEditComponent } from './file-edit/file-edit.component';
 import { CategoryStore } from '../core/state/category/category.store';
 import { NgEntityServiceLoader } from '@datorama/akita-ng-entity-service';
+import { Observable, Subject } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -38,10 +39,16 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
   selectedIndex = 0;
   tabData: TabData[] = [];
   loading = true;
+  allTags: string[] = [];
+  private _filteredTags = new Subject<string[]>();
+
+  get filteredTags(): Observable<string[]> {
+    return this._filteredTags;
+  }
 
   /**
+   *  TODO: -> StatusStore
    *  TODO: -> Config für UserJoined/UserLeft/Disconnected
-   *  TODO: -> Sound per Tag zu Leave/Connect hinzufügen
    */
 
   constructor(private core: CoreService,
@@ -68,6 +75,9 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
           this.categoryStore.add({id: v.category});
           this._categories.add(v.category);
         }
+
+        this.allTags = [...new Set([...this.allTags, ...v.tags])];
+        this._filteredTags.next(this.allTags);
       });
 
       Array.from(this._categories).forEach((category: string, index: number) => {
@@ -90,10 +100,12 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
     });
 
     this.filterForm.controls.inputFilter.valueChanges.pipe(untilDestroyed(this)).subscribe((value: string) => {
+      value = value.trim().toLowerCase();
       this.selectedIndex = 0;
       const tabData = this.getTabData(SoundboardComponent.SEARCH);
-      tabData.dataSource.filter = value.trim().toLowerCase() || 'NULL';
+      tabData.dataSource.filter = value || 'NULL';
       tabData.dataSource.paginator!.firstPage();
+      this._filteredTags.next(this.allTags.filter(t => t.toLowerCase().includes(value)));
     });
   }
 
