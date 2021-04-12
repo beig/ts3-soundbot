@@ -31,6 +31,7 @@ import { SortByPipe } from './core/sort-by.pipe';
 import { FileEditComponent } from './soundboard/file-edit/file-edit.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatTabsModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     MatChipsModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatProgressBarModule
   ],
   providers: [{provide: NG_ENTITY_SERVICE_CONFIG, useValue: {baseUrl: environment.url}}],
   bootstrap: [AppComponent]

@@ -8,10 +8,9 @@
 
   <span class="spacer"></span>
   {{(health | async)?.status}}
-  <button mat-icon-button>
-    <mat-icon>menu</mat-icon>
-  </button>
 </mat-toolbar>
+
+<mat-progress-bar *ngIf="loading" color="warn" mode="query"></mat-progress-bar>
 
 <form [formGroup]="filterForm" autocomplete="off" class="example-form">
   <mat-form-field class="example-full-width">

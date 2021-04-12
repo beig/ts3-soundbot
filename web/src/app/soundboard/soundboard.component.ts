@@ -15,6 +15,7 @@ import { SoundFile } from '../core/state/sound-file/sound-file.model';
 import { BotControlComponent } from './bot-control/bot-control.component';
 import { FileEditComponent } from './file-edit/file-edit.component';
 import { CategoryStore } from '../core/state/category/category.store';
+import { NgEntityServiceLoader } from '@datorama/akita-ng-entity-service';
 
 @UntilDestroy()
 @Component({
@@ -38,6 +39,7 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
   status = Status;
   selectedIndex = 0;
   tabData: TabData[] = [];
+  loading = false;
 
   /**
    *  TODO: -> Config für UserJoined/UserLeft/Disconnected
@@ -50,6 +52,7 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
               private soundQuery: SoundFileQuery,
               private soundService: SoundFileService,
               private categoryStore: CategoryStore,
+              public loader: NgEntityServiceLoader,
               private cd: ChangeDetectorRef,
               private fb: FormBuilder) {
   }
@@ -57,6 +60,10 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.filterForm = this.fb.group({
       inputFilter: []
+    });
+
+    this.loader.loadersFor('files').get$.pipe(untilDestroyed(this)).subscribe(value => {
+      this.loading = value;
     });
 
     this.soundService.get().pipe(untilDestroyed(this)).subscribe();
