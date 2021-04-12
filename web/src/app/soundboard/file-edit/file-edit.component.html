@@ -4,7 +4,8 @@
     <div class="description">
       <mat-form-field class="tag-list">
         <mat-label>Beschreibung</mat-label>
-        <input autocomplete="off" matInput placeholder="Beschreibung eingeben ..." [formControl]="descriptionControl">
+        <input (keyup.enter)="save()" autocomplete="off" matInput placeholder="Beschreibung eingeben ..."
+               [formControl]="descriptionControl">
       </mat-form-field>
     </div>
 
@@ -21,7 +22,8 @@
       <mat-label>Tags</mat-label>
       <mat-chip-list #chipList>
         <mat-chip
-          *ngFor="let tag of tags"
+          *ngFor="let tag of tags | sortTag"
+          [ngClass]="tag === 'Greeting' ? 'green' : tag === 'Leave-taking' ? 'orange' : ''"
           [selectable]="selectable"
           [removable]="removable"
           (removed)="remove(tag)">

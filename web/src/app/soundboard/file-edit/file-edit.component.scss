@@ -1,5 +1,7 @@
+@import "theme";
+
 .container {
-  width: 500px;
+  width: 700px;
 }
 
 .tag-list {
@@ -21,4 +23,20 @@
 
 .category {
   margin-bottom: 1rem;
+}
+
+.mat-chip.primary {
+  background-color: mat-color($web-app-primary) !important;
+}
+
+.mat-chip.green {
+  background-color: mat-color($web-app-green) !important;
+}
+
+.mat-chip.light-green {
+  background-color: mat-color($web-app-light-green) !important;
+}
+
+.mat-chip.orange {
+  background-color: mat-color($web-app-orange) !important;
 }

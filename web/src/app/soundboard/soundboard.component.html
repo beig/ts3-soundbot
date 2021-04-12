@@ -2,7 +2,7 @@
   <span>wastedtime.se - Soundboard</span>
   <span class="spacer"></span>
 
-  <button (click)="showBotControl()" [disabled]="(health|async)?.status === status.OFFLINE" color="accent"
+  <button (click)="showBotControl()" [disabled]="(health|async)?.status === status.OFFLINE" color="primary"
           mat-raised-button>Bot Control
   </button>
 
@@ -64,7 +64,7 @@
           <ng-container matColumnDef="edit">
             <th *matHeaderCellDef mat-header-cell style="width: 5%">Editieren</th>
             <td *matCellDef="let row" mat-cell style="width: 5%">
-              <button mat-icon-button (click)="openSettings(row)" color="accent">
+              <button mat-icon-button (click)="openSettings(row)" color="primary">
                 <mat-icon>more_vert</mat-icon>
               </button>
             </td>

@@ -33,6 +33,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { EventService } from './core/event.service';
+import { SortTagPipe } from './core/sort-tag.pipe';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { EventService } from './core/event.service';
     LocalAudioControlComponent,
     ApplyPipe,
     SortByPipe,
-    FileEditComponent
+    FileEditComponent,
+    SortTagPipe
   ],
   imports: [
     BrowserModule,

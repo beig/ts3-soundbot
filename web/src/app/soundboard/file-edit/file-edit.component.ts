@@ -29,7 +29,7 @@ export class FileEditComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   tagCtrl = new FormControl();
   filteredTags: Observable<string[]>;
-  allTags: string[] = [];
+  allTags: string[] = ['Greeting', 'Leave-taking'];
   tags: string[] = [];
   description = '';
   descriptionControl: FormControl;
@@ -40,10 +40,11 @@ export class FileEditComponent implements OnInit {
               private service: SoundFileService,
               public categoryQuery: CategoryQuery,
               public dialogRef: MatDialogRef<FileEditComponent>) {
-    this.tags.push(...data.tags);
-    this.description = data.description;
-    this.descriptionControl = new FormControl(this.description);
-    this.category = this.categoryQuery.getEntity(data.category)!;
+    this.descriptionControl = new FormControl();
+
+    this.query.selectEntity(data.name).subscribe(value => {
+      this.init(value!);
+    });
 
     this.descriptionControl.valueChanges.pipe(untilDestroyed(this)).subscribe(value => {
       this.description = value;
@@ -72,7 +73,7 @@ export class FileEditComponent implements OnInit {
 
     if ((value || '').trim()) {
       if (!this.tags.map(t => t.toLowerCase()).includes(value.trim().toLowerCase())) {
-        this.tags.push(value.trim());
+        this.tags = [...this.tags, value.trim()];
       }
     }
 
@@ -93,7 +94,7 @@ export class FileEditComponent implements OnInit {
 
   selected(event: MatAutocompleteSelectedEvent): void {
     if (!this.tags.map(t => t.toLowerCase()).includes(event.option.viewValue.toLowerCase())) {
-      this.tags.push(event.option.viewValue);
+      this.tags = [...this.tags, event.option.viewValue];
     }
     this.tagInput.nativeElement.value = '';
     this.tagCtrl.setValue(null);
@@ -113,6 +114,13 @@ export class FileEditComponent implements OnInit {
     this.service.update(this.data.name, this.data).pipe(take(1)).subscribe(() => {
       this.dialogRef.close();
     });
+  }
+
+  private init(entity: SoundFile): void {
+    this.tags = [...entity.tags];
+    this.description = entity.description;
+    this.descriptionControl.setValue(entity.description);
+    this.category = this.categoryQuery.getEntity(entity.category)!;
   }
 
   private _filter(value: string): string[] {

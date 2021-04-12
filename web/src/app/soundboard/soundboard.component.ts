@@ -42,7 +42,6 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
   /**
    *  TODO: -> Config für UserJoined/UserLeft/Disconnected
    *  TODO: -> Sound per Tag zu Leave/Connect hinzufügen
-   *  TODO: -> FileEditComponent Enter Listener save
    */
 
   constructor(private core: CoreService,
