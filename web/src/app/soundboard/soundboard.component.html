@@ -55,7 +55,7 @@
           </ng-container>
 
           <ng-container matColumnDef="count">
-            <th *matHeaderCellDef mat-header-cell mat-sort-header style="width: 10%">#</th>
+            <th *matHeaderCellDef mat-header-cell mat-sort-header="playCount" style="width: 10%">#</th>
             <td *matCellDef="let row" mat-cell style="width: 10%">{{row.playCount}}</td>
           </ng-container>
 
