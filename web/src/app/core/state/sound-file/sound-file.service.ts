@@ -4,12 +4,15 @@ import { SoundFileState, SoundFileStore } from './sound-file.store';
 import { getEntityType, getIDType } from '@datorama/akita';
 import { Observable } from 'rxjs';
 import { EventService } from '../../event.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Injectable({providedIn: 'root'})
 export class SoundFileService extends NgEntityService<SoundFileState> {
 
   constructor(protected store: SoundFileStore) {
     super(store);
+    this.get().pipe(untilDestroyed(this)).subscribe();
   }
 
 

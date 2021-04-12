@@ -7,7 +7,6 @@ import { Status } from '../data/health';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { SoundFileQuery } from '../core/state/sound-file/sound-file.query';
-import { SoundFileService } from '../core/state/sound-file/sound-file.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TabData } from '../data/tab-data';
 import { SoundFile } from '../core/state/sound-file/sound-file.model';
@@ -15,7 +14,6 @@ import { BotControlComponent } from './bot-control/bot-control.component';
 import { FileEditComponent } from './file-edit/file-edit.component';
 import { CategoryStore } from '../core/state/category/category.store';
 import { NgEntityServiceLoader } from '@datorama/akita-ng-entity-service';
-import { SoundFileStore } from '../core/state/sound-file/sound-file.store';
 
 @UntilDestroy()
 @Component({
@@ -39,19 +37,18 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
   status = Status;
   selectedIndex = 0;
   tabData: TabData[] = [];
-  loading = false;
+  loading = true;
 
   /**
    *  TODO: -> Config für UserJoined/UserLeft/Disconnected
-   *  TODO: -> Server Sent Events
+   *  TODO: -> Sound per Tag zu Leave/Connect hinzufügen
+   *  TODO: -> FileEditComponent Enter Listener save
    */
 
   constructor(private core: CoreService,
               public dialog: MatDialog,
               private soundQuery: SoundFileQuery,
-              private soundService: SoundFileService,
               private categoryStore: CategoryStore,
-              private soundStore: SoundFileStore,
               public loader: NgEntityServiceLoader,
               private cd: ChangeDetectorRef,
               private fb: FormBuilder) {
@@ -65,8 +62,6 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
     this.loader.loadersFor('files').get$.pipe(untilDestroyed(this)).subscribe(value => {
       this.loading = value;
     });
-
-    this.soundService.get().pipe(untilDestroyed(this)).subscribe();
 
     this.soundQuery.selectAll().pipe().subscribe(value => {
       value.forEach(v => {
