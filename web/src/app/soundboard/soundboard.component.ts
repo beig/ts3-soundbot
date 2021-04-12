@@ -108,7 +108,7 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
           return true;
         }
         const matchDescription = data.description === null ? false : data.description.toLowerCase().includes(filter);
-        const matchTags = data.tags.includes(filter);
+        const matchTags = data.tags.map(t => t.toLowerCase()).includes(filter);
         return data.name.toLowerCase().includes(filter) || matchDescription || matchTags;
       };
     }
