@@ -23,6 +23,7 @@ public class SoundFile {
         this.category = update.getCategory();
         this.tags = update.getTags();
         this.softDeleted = update.isSoftDeleted();
+        this.path = update.getPath();
     }
 
     @Id
