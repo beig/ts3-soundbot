@@ -6,7 +6,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Status } from '../data/health';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { EventService } from '../core/event.service';
 import { SoundFileQuery } from '../core/state/sound-file/sound-file.query';
 import { SoundFileService } from '../core/state/sound-file/sound-file.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -16,6 +15,7 @@ import { BotControlComponent } from './bot-control/bot-control.component';
 import { FileEditComponent } from './file-edit/file-edit.component';
 import { CategoryStore } from '../core/state/category/category.store';
 import { NgEntityServiceLoader } from '@datorama/akita-ng-entity-service';
+import { SoundFileStore } from '../core/state/sound-file/sound-file.store';
 
 @UntilDestroy()
 @Component({
@@ -47,11 +47,11 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
    */
 
   constructor(private core: CoreService,
-              private events: EventService,
               public dialog: MatDialog,
               private soundQuery: SoundFileQuery,
               private soundService: SoundFileService,
               private categoryStore: CategoryStore,
+              private soundStore: SoundFileStore,
               public loader: NgEntityServiceLoader,
               private cd: ChangeDetectorRef,
               private fb: FormBuilder) {

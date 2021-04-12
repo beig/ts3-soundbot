@@ -16,6 +16,15 @@ import java.util.List;
 @Document(collection = "files", schemaVersion = "1.0")
 public class SoundFile {
 
+    public SoundFile(SoundFileUpdate update) {
+        this.name = update.getName();
+        this.duration = update.getDuration();
+        this.description = update.getDescription();
+        this.category = update.getCategory();
+        this.tags = update.getTags();
+        this.softDeleted = update.isSoftDeleted();
+    }
+
     @Id
     String name;
     String path;
@@ -34,4 +43,5 @@ public class SoundFile {
     public File getAsFile() {
         return new File(getPath());
     }
+
 }

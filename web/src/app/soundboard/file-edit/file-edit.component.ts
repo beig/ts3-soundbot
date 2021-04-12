@@ -108,7 +108,7 @@ export class FileEditComponent implements OnInit {
       ...this.data,
       description: this.description,
       tags: this.tags,
-      category: this.category.id
+      category: this.category?.id
     };
     this.service.update(this.data.name, this.data).pipe(take(1)).subscribe(() => {
       this.dialogRef.close();

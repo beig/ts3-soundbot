@@ -10,6 +10,7 @@ import org.springframework.util.FileCopyUtils;
 import se.wastedtime.ts3.Properties;
 import se.wastedtime.ts3.api.EventEmitter;
 import se.wastedtime.ts3.data.SoundFile;
+import se.wastedtime.ts3.data.SoundFileUpdate;
 
 import java.util.List;
 
@@ -51,10 +52,11 @@ public class DatabaseServiceImpl implements DatabaseService {
     }
 
     @Override
-    public SoundFile updateFile(SoundFile file) {
-        jsonDB.upsert(file);
+    public SoundFile updateFile(SoundFileUpdate file) {
+        SoundFile soundFile = new SoundFile(file);
+        jsonDB.upsert(soundFile);
         this.eventEmitter.publishFileEvent(file);
-        return file;
+        return soundFile;
     }
 
     @Override

@@ -5,6 +5,7 @@ import lombok.Value;
 
 @Value
 public class EventData {
+    String clientId;
     EventDataType type;
     Object payload;
 

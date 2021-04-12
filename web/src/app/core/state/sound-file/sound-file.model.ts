@@ -4,6 +4,7 @@ export interface SoundFile {
   duration: number;
   category: string;
   tags: string[];
+  clientId?: string;
 }
 
 export function createSoundFile(params: Partial<SoundFile>): SoundFile {

@@ -32,6 +32,7 @@ import { FileEditComponent } from './soundboard/file-edit/file-edit.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { EventService } from './core/event.service';
 
 @NgModule({
   declarations: [

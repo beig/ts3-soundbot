@@ -12,6 +12,7 @@ import se.wastedtime.ts3.bot.TeamspeakBotImpl;
 import se.wastedtime.ts3.core.DatabaseService;
 import se.wastedtime.ts3.data.Health;
 import se.wastedtime.ts3.data.SoundFile;
+import se.wastedtime.ts3.data.SoundFileUpdate;
 
 import java.util.List;
 
@@ -103,7 +104,7 @@ public class BotApi {
     }
 
     @PutMapping("/files/{id}")
-    public SoundFile updateFile(@PathVariable String id, @RequestBody SoundFile body) {
+    public SoundFile updateFile(@PathVariable String id, @RequestBody SoundFileUpdate body) {
         return databaseService.updateFile(body);
     }
 

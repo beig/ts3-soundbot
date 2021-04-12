@@ -2,6 +2,7 @@ package se.wastedtime.ts3.core;
 
 import org.springframework.core.io.ByteArrayResource;
 import se.wastedtime.ts3.data.SoundFile;
+import se.wastedtime.ts3.data.SoundFileUpdate;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface DatabaseService {
 
     List<SoundFile> getFiles();
 
-    SoundFile updateFile(SoundFile file);
+    SoundFile updateFile(SoundFileUpdate file);
 
     ByteArrayResource downloadFile(SoundFile file);
 }
