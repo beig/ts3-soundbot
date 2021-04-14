@@ -12,6 +12,7 @@ import se.wastedtime.ts3.bot.TeamspeakBotImpl;
 import se.wastedtime.ts3.core.DatabaseService;
 import se.wastedtime.ts3.data.Health;
 import se.wastedtime.ts3.data.SoundFile;
+import se.wastedtime.ts3.data.SoundFileCreate;
 import se.wastedtime.ts3.data.SoundFileUpdate;
 
 import java.util.List;
@@ -91,6 +92,11 @@ public class BotApi {
     @GetMapping("/files")
     public List<SoundFile> getFiles() {
         return databaseService.getFiles();
+    }
+
+    @PostMapping("/files")
+    public SoundFile uploadFile(@RequestBody SoundFileCreate fileCreate) {
+        return this.databaseService.createFile(fileCreate);
     }
 
     @GetMapping("/files/{id}")

@@ -1,0 +1,13 @@
+<div class="center">
+  <ngx-file-drop dropZoneLabel="Datei hier ..." (onFileDrop)="dropped($event)"
+                 [multiple]="false"
+                 accept=".mp3"
+                 [directory]="false">
+    <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+      <div class="drop-container">
+        <span>Drop</span>
+        <button type="button" (click)="openFileSelector()">Browse</button>
+      </div>
+    </ng-template>
+  </ngx-file-drop>
+</div>

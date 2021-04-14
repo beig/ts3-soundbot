@@ -2,8 +2,11 @@
   <span>wastedtime.se - Soundboard</span>
   <span class="spacer"></span>
 
-  <button (click)="showBotControl()" [disabled]="(health|async)?.status === status.OFFLINE" color="primary"
+  <button (click)="showBotControl()" [disabled]="(health|async)?.status === status.OFFLINE" class="blue"
           mat-raised-button>Bot Control
+  </button>
+  <button (click)="uploadFile()" [disabled]="(health|async)?.status === status.OFFLINE" class="green margin-left"
+          mat-raised-button>Soundfile hochladen
   </button>
 
   <span class="spacer"></span>

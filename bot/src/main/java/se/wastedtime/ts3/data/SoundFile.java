@@ -26,6 +26,15 @@ public class SoundFile {
         this.path = update.getPath();
     }
 
+    public SoundFile(SoundFileCreate file, String directory) {
+        this.name = file.getName();
+        this.description = file.getDescription();
+        this.category = file.getCategory();
+        this.tags = file.getTags();
+        this.softDeleted = false;
+        this.path = directory + File.separator + this.name;
+    }
+
     @Id
     String name;
     String path;

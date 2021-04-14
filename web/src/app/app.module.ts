@@ -32,8 +32,9 @@ import { FileEditComponent } from './soundboard/file-edit/file-edit.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { EventService } from './core/event.service';
 import { SortTagPipe } from './core/sort-tag.pipe';
+import { UploadFileComponent } from './soundboard/upload-file/upload-file.component';
+import { NgxFileDropModule } from 'ngx-file-drop';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { SortTagPipe } from './core/sort-tag.pipe';
     ApplyPipe,
     SortByPipe,
     FileEditComponent,
-    SortTagPipe
+    SortTagPipe,
+    UploadFileComponent
   ],
   imports: [
     BrowserModule,
@@ -70,7 +72,8 @@ import { SortTagPipe } from './core/sort-tag.pipe';
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     MatChipsModule,
     MatAutocompleteModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    NgxFileDropModule
   ],
   providers: [{provide: NG_ENTITY_SERVICE_CONFIG, useValue: {baseUrl: environment.url}}],
   bootstrap: [AppComponent]

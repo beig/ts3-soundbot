@@ -1,0 +1,14 @@
+.drop-container {
+  display: flex;
+  flex-direction: column;
+
+  > span {
+    margin: auto;
+  }
+}
+
+.center {
+  width: 200px;
+}
+
+

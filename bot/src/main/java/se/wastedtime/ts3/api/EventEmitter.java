@@ -10,6 +10,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 import se.wastedtime.ts3.data.EventData;
 import se.wastedtime.ts3.data.SoundFile;
+import se.wastedtime.ts3.data.SoundFileCreate;
 import se.wastedtime.ts3.data.SoundFileUpdate;
 
 @RestController
@@ -29,6 +30,10 @@ public class EventEmitter {
 
     public void publishFileEvent(SoundFile soundFile) {
         this.sink.tryEmitNext(new EventData(null, EventData.EventDataType.SOUNDFILE, soundFile));
+    }
+
+    public void publishFileEvent(SoundFileCreate file) {
+        this.sink.tryEmitNext(new EventData(file.getClientId(), EventData.EventDataType.SOUNDFILE, file));
     }
 
     @RequestMapping(value = "/event-stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

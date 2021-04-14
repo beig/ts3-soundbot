@@ -1,3 +1,5 @@
+@import "theme";
+
 .spacer {
   flex: 1 1 auto;
 }
@@ -36,4 +38,16 @@ td, th {
 
 .close-button {
   color: white;
+}
+
+button.green {
+  background-color: mat-color($web-app-green) !important;
+}
+
+button.blue {
+  background-color: mat-color($web-app-blue) !important;
+}
+
+.margin-left {
+  margin-left: 1rem;
 }

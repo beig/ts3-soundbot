@@ -34,6 +34,7 @@ export class FileEditComponent implements OnInit {
   description = '';
   descriptionControl: FormControl;
   category: Category;
+  isNew: boolean;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: SoundFile,
               private query: SoundFileQuery,
@@ -42,9 +43,14 @@ export class FileEditComponent implements OnInit {
               public dialogRef: MatDialogRef<FileEditComponent>) {
     this.descriptionControl = new FormControl();
 
-    this.query.selectEntity(data.name).subscribe(value => {
-      this.init(value!);
-    });
+    if (data.isNew) {
+      this.isNew = data.isNew;
+      this.init(data);
+    } else {
+      this.query.selectEntity(data.name).subscribe(value => {
+        this.init(value!);
+      });
+    }
 
     this.descriptionControl.valueChanges.pipe(untilDestroyed(this)).subscribe(value => {
       this.description = value;
@@ -111,9 +117,19 @@ export class FileEditComponent implements OnInit {
       tags: this.tags,
       category: this.category?.id
     };
-    this.service.update(this.data.name, this.data).pipe(take(1)).subscribe(() => {
-      this.dialogRef.close();
-    });
+    if (this.isNew) {
+      this.service.add<SoundFile>(this.data).pipe(take(1)).subscribe((value: SoundFile) => {
+        const update = {
+          ...value
+        };
+        this.service.update(value.name, update);
+        this.dialogRef.close();
+      });
+    } else {
+      this.service.update(this.data.name, this.data).pipe(take(1)).subscribe(() => {
+        this.dialogRef.close();
+      });
+    }
   }
 
   private init(entity: SoundFile): void {

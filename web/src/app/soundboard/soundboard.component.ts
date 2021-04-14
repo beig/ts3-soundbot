@@ -15,6 +15,7 @@ import { FileEditComponent } from './file-edit/file-edit.component';
 import { CategoryStore } from '../core/state/category/category.store';
 import { NgEntityServiceLoader } from '@datorama/akita-ng-entity-service';
 import { Observable, Subject } from 'rxjs';
+import { UploadFileComponent } from './upload-file/upload-file.component';
 
 @UntilDestroy()
 @Component({
@@ -140,6 +141,10 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
 
   openSettings(file: SoundFile): void {
     this.dialog.open(FileEditComponent, {data: file});
+  }
+
+  uploadFile(): void {
+    this.dialog.open(UploadFileComponent);
   }
 
   async playFile(file: SoundFile): Promise<void> {

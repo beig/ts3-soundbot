@@ -3,6 +3,7 @@ package se.wastedtime.ts3.core;
 import io.jsondb.JsonDBTemplate;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jaudiotagger.audio.AudioFileIO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -10,8 +11,10 @@ import org.springframework.util.FileCopyUtils;
 import se.wastedtime.ts3.Properties;
 import se.wastedtime.ts3.api.EventEmitter;
 import se.wastedtime.ts3.data.SoundFile;
+import se.wastedtime.ts3.data.SoundFileCreate;
 import se.wastedtime.ts3.data.SoundFileUpdate;
 
+import java.io.FileOutputStream;
 import java.util.List;
 
 @Service
@@ -72,5 +75,23 @@ public class DatabaseServiceImpl implements DatabaseService {
     @SneakyThrows
     public ByteArrayResource downloadFile(SoundFile file) {
         return new ByteArrayResource(FileCopyUtils.copyToByteArray(file.getAsFile()));
+    }
+
+    @Override
+    @SneakyThrows
+    public SoundFile createFile(SoundFileCreate file) {
+        SoundFile byId = jsonDB.findById(file.getName(), SoundFile.class);
+        if (byId != null) {
+            throw new DatabaseException("File exists");
+        } else {
+            SoundFile soundFile = new SoundFile(file, properties.getDatabaseDirectory());
+            FileOutputStream fileOutputStream = new FileOutputStream(soundFile.getAsFile());
+            fileOutputStream.write(file.getData());
+            fileOutputStream.close();
+            soundFile.setDuration(AudioFileIO.read(soundFile.getAsFile()).getAudioHeader().getTrackLength());
+            this.eventEmitter.publishFileEvent(file);
+            jsonDB.insert(soundFile);
+            return soundFile;
+        }
     }
 }
