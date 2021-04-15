@@ -1,6 +1,6 @@
-<div class="center">
+<div class="center" *ngIf="!multiUpload">
   <ngx-file-drop dropZoneLabel="Datei hier ..." (onFileDrop)="dropped($event)"
-                 [multiple]="false"
+                 [multiple]="true"
                  accept=".mp3"
                  [directory]="false">
     <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
@@ -11,3 +11,5 @@
     </ng-template>
   </ngx-file-drop>
 </div>
+
+<app-batch-upload #batchUploadComponent [uploadFileComponent]="this" *ngIf="multiUpload"></app-batch-upload>

@@ -1,0 +1,73 @@
+<table mat-table [dataSource]="dataSource">
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef style="width: 10%"> Name</th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef style="width: 10%"> Beschreibung</th>
+    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="category">
+    <th mat-header-cell *matHeaderCellDef style="width: 20%"> Kategorie</th>
+    <td mat-cell *matCellDef="let element">
+      <mat-form-field class="category" appearance="fill">
+        <mat-label>Kategorie</mat-label>
+        <mat-select [(value)]="element.category">
+          <mat-option *ngFor="let category of categoryQuery.getAll()" [value]="category">
+            {{category.id}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="tags">
+    <th mat-header-cell *matHeaderCellDef style="width: 55%"> Tags</th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <mat-chip-list #chipList>
+        <mat-chip
+          *ngFor="let tag of element.tags | sortTag"
+          [ngClass]="tag === 'Greeting' ? 'green' : tag === 'Leave-taking' ? 'orange' : ''"
+          [selectable]="true"
+          [removable]="true"
+          (removed)="remove(tag, element)">
+          {{tag}}
+          <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="Neuer Tag ..."
+          #tagInput
+          [formControl]="tagCtrl"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event, element)">
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, element, i)">
+        <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+          {{tag}}
+        </mat-option>
+      </mat-autocomplete>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <th mat-header-cell *matHeaderCellDef style="width: 5%"> Löschen</th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <button mat-icon-button (click)="delete(i)" color="primary">
+        <mat-icon>highlight_off</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<div mat-dialog-actions class="action-container">
+  <button (click)="cancel()" mat-raised-button color="warn">Abbrechen</button>
+  <button (click)="save()" mat-raised-button color="primary">Speichern</button>
+</div>

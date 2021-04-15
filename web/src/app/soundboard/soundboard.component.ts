@@ -51,6 +51,8 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
    *  TODO: -> StatusStore
    *  TODO: -> Config für UserJoined/UserLeft/Disconnected
    *  TODO: -> LocalStore Favorites
+   *  TODO: -> FileUpload replace _ mit " "
+   *  TODO: -> FileUploader -> Error
    */
 
   constructor(private core: CoreService,

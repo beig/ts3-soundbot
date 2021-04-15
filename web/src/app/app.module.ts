@@ -35,6 +35,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SortTagPipe } from './core/sort-tag.pipe';
 import { UploadFileComponent } from './soundboard/upload-file/upload-file.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
+import { BatchUploadComponent } from './soundboard/upload-file/batch-upload/batch-upload.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { NgxFileDropModule } from 'ngx-file-drop';
     SortByPipe,
     FileEditComponent,
     SortTagPipe,
-    UploadFileComponent
+    UploadFileComponent,
+    BatchUploadComponent
   ],
   imports: [
     BrowserModule,

@@ -14,6 +14,7 @@ import se.wastedtime.ts3.data.SoundFile;
 import se.wastedtime.ts3.data.SoundFileCreate;
 import se.wastedtime.ts3.data.SoundFileUpdate;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class DatabaseServiceImpl implements DatabaseService {
         if (byId != null) {
             throw new DatabaseException("File exists");
         } else {
-            SoundFile soundFile = new SoundFile(file, properties.getDatabaseDirectory());
+            SoundFile soundFile = new SoundFile(file, properties.getSoundDirectory() + "drache" + File.separator);
             FileOutputStream fileOutputStream = new FileOutputStream(soundFile.getAsFile());
             fileOutputStream.write(file.getData());
             fileOutputStream.close();
