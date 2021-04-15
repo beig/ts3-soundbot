@@ -80,7 +80,7 @@ export class UploadFileComponent implements OnInit {
           tags: [],
           description: '',
           name: file.name,
-          category: '',
+          category: 'NEW',
           duration: 0,
           playCount: 0,
           isNew: true,

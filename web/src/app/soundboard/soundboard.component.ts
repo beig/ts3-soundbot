@@ -27,8 +27,9 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
 
   public static SEARCH = 'SUCHE';
   public static UNKNOWN = 'UNBEKANNTE';
+  public static NEW = 'NEW';
 
-  private _categories = new Set<string>([SoundboardComponent.SEARCH, SoundboardComponent.UNKNOWN]);
+  private _categories = new Set<string>([SoundboardComponent.SEARCH, SoundboardComponent.NEW, SoundboardComponent.UNKNOWN]);
 
   @ViewChildren(MatPaginator) paginators: QueryList<MatPaginator>;
   @ViewChildren(MatSort) sorts: QueryList<MatSort>;
