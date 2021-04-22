@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="dataSource">
+<table mat-table [dataSource]="dataSource" matSort>
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef style="width: 10%"> Name</th>
@@ -66,6 +66,9 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+
+<mat-paginator showFirstLastButtons="true"
+               [pageSizeOptions]="[5]"></mat-paginator>
 
 <div mat-dialog-actions class="action-container">
   <button (click)="cancel()" mat-raised-button color="warn">Abbrechen</button>

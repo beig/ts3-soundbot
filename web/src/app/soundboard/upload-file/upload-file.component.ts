@@ -36,27 +36,10 @@ export class UploadFileComponent implements OnInit {
       this.batchUploadComponent.soundFiles = soundFiles;
     } else {
       const fileEntry = files[0].fileEntry as FileSystemFileEntry;
-      if (fileEntry.isFile) {
-        fileEntry.file(async (file: File) => {
-
-          const arrayBuffer = await file.arrayBuffer();
-          const base64File = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-
-          const createFile: SoundFile = {
-            tags: [],
-            description: '',
-            name: file.name,
-            category: '',
-            duration: 0,
-            playCount: 0,
-            isNew: true,
-            data: base64File
-          };
-
-          this.dialog.open(FileEditComponent, {data: createFile});
-          this.dialogRef.close();
-        });
-      }
+      const soundFile = await this.loadFile(fileEntry);
+      soundFile.description = '';
+      this.dialog.open(FileEditComponent, {data: soundFile});
+      this.dialogRef.close();
     }
   }
 
@@ -79,7 +62,7 @@ export class UploadFileComponent implements OnInit {
         const createFile: SoundFile = {
           tags: [],
           description: '',
-          name: file.name,
+          name: file.name.replace(/_/g, ' '),
           category: 'NEW',
           duration: 0,
           playCount: 0,

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { SoundFile } from '../../../core/state/sound-file/sound-file.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoryQuery } from '../../../core/state/category/category.query';
@@ -6,12 +6,14 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { map, startWith, take } from 'rxjs/operators';
+import { catchError, map, startWith, take } from 'rxjs/operators';
 import { SoundFileQuery } from '../../../core/state/sound-file/sound-file.query';
 import { UploadFileComponent } from '../upload-file.component';
 import { SoundFileService } from '../../../core/state/sound-file/sound-file.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @UntilDestroy()
 @Component({
@@ -22,6 +24,8 @@ import { SoundFileService } from '../../../core/state/sound-file/sound-file.serv
 export class BatchUploadComponent implements OnInit {
 
   @ViewChildren('tagInput') tagInputs: QueryList<ElementRef<HTMLInputElement>>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   @Input()
   uploadFileComponent: UploadFileComponent;
@@ -37,8 +41,9 @@ export class BatchUploadComponent implements OnInit {
   @Input()
   set soundFiles(value: SoundFile[]) {
     this._soundFiles = value;
-    console.log('setting', value);
     this.dataSource = new MatTableDataSource<SoundFile>(this._soundFiles);
+    this.dataSource.paginator = this.paginator || null;
+    this.dataSource.sort = this.sort || null;
   }
 
   constructor(public categoryQuery: CategoryQuery,
@@ -104,7 +109,10 @@ export class BatchUploadComponent implements OnInit {
 
     await Promise.all(filesToSave.map(value => {
       return new Promise<void>(resolve => {
-        this.service.add<SoundFile>(value).pipe(take(1)).subscribe(saved => {
+        this.service.add<SoundFile>(value).pipe(catchError(err => {
+          resolve();
+          return of(err);
+        }), take(1)).subscribe(saved => {
           const update = {
             ...saved
           };
