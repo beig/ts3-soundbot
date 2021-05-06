@@ -25,7 +25,7 @@
            type="text"
            [matAutocomplete]="auto">
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+      <mat-option *ngFor="let tag of filteredTags | async" [value]="'TAG:' + tag">
         {{tag}}
       </mat-option>
     </mat-autocomplete>

@@ -122,9 +122,21 @@ export class SoundboardComponent implements OnInit, AfterViewInit {
         if (filter === 'NULL') {
           return true;
         }
-        const matchDescription = data.description === null ? false : data.description.toLowerCase().includes(filter);
-        const matchTags = data.tags.map(t => t.toLowerCase()).includes(filter);
-        return data.name.toLowerCase().includes(filter) || matchDescription || matchTags;
+
+        if (filter.indexOf(':') > -1) {
+          const split = filter.split(':');
+          const op = split[0];
+          const val = split[1];
+
+          if (op === 'tag') {
+            return data.tags.map(t => t.toLowerCase()).includes(val);
+          }
+          return false;
+        } else {
+          const matchDescription = data.description === null ? false : data.description.toLowerCase().includes(filter);
+          const matchTags = data.tags.map(t => t.toLowerCase()).includes(filter);
+          return data.name.toLowerCase().includes(filter) || matchDescription || matchTags;
+        }
       };
     }
 
